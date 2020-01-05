@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>发布问题</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body style="background-color:gainsboro">
+<div th:include="index::copyright"></div>
+<div class="container-fluid" style="margin: 50px 50px 50px 50px ;background-color: lavender">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+            <h2><span class="glyphicon glyphicon glyphicon-tags" aria-hidden="true"></span> 发起提问</h2>
+            <hr>
+            <form action="/publish" method="post">
+                <div class="form-group">
+                    <label for="title" > 提问标题</label>
+                    <input type="text" class="form-control" th:name="title" th:value="${title}" id="title"
+                           placeholder="清晰明了输入提问标题，以便回答者更好理解"/>
+                </div>
+                <div class="form-group">
+                    <label for="description" > 提问内容</label>
+                    <textarea class="form-control" name="description" th:text="${description}" id="description" cols="30" rows="10"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="tag"> 添加标签</label>
+                    <input type="text" th:value="${tag}" class="form-control" th:name="tag" id="tag"
+                           placeholder="输入标签 以',' 号隔开为一个标签"/>
+                </div>
+                <div style="width: 100%" class="alert alert-danger"  th:text="${error}" th:if="${error!=null}"></div>
+                <div style="width: 100%"><button type="submit" class="btn btn-success" style="float: right">发起提问</button></div>
+               <!-- <p><button type="button" class="btn btn-default btn-lg active" style="float: right">匿名发布</button></p>-->
+            </form>
+        </div>
+        <h3 class="col-lg-3 col-md-12 col-sm-12 col-xs-12"  style="margin: 50px 50px 50px 50px ">
+            <h3>问题发起指南</h3>
+            • 问题标题: 请用精简的语言描述您发布的问题，不超过25字
+            • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料
+            • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字
+        </h3>
+        </div>
+</div>
+</body>
+</html>

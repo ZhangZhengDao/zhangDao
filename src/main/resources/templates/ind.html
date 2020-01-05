@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>发布问题</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.css">
+    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body style="background-color:gainsboro">
+<div th:include="index::copyright"></div>
+<div class="container-fluid" style="margin: 0px 50px 50px 50px ;background-color: white">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+            <h2><span class="glyphicon glyphicon glyphicon-baby-formula" aria-hidden="true"></span> 发现</h2>
+            <hr>
+            <!--内容行-->
+            <div class="media" th:each="a : ${list}">
+                <div class="media-left">
+                    <a href="#">
+                        <img style="width: 55px;height: 55px" class="img-rounded" th:src="${a.user.getAvatar_url()}" >
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${a.user.getName()}">用户名</h4>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getTitle()}"></span>
+                   <br>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.description}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.comment_count}" th:if="${a.comment_count!=null}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${a.comment_count==null}"></span>个回复 .
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.view_count}" th:if="${a.view_count!=null}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${a.view_count==null}"></span>次浏览 .
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${#dates.format(a.getGmt_create(),'mm:HH dd MMM yyyy')}"></span>
+                    <hr>
+            </div>
+        </div>
+        </div>
+            <h3 class="col-lg-3 col-md-12 col-sm-12 col-xs-12"  style="margin: 50px 50px 50px 50px ">
+                <h3>问题发起指南</h3>
+                • 问题标题: 请用精简的语言描述您发布的问题，不超过25字
+                • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料
+                • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字
+            </h3>
+        </div>
+    </div>
+</body>
+</html>
