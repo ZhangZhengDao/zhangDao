@@ -2,14 +2,20 @@ package cn.zhang.com.controller;
 
 import cn.zhang.com.dto.AccessTokenDTO;
 import cn.zhang.com.dto.GithubUser;
+import cn.zhang.com.dto.PaginationDTO;
 import cn.zhang.com.mapper.Usermapper;
 import cn.zhang.com.model.User;
 import cn.zhang.com.provider.GithubProvider;
+import cn.zhang.com.service.QuerstionService;
+import cn.zhang.com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +27,8 @@ public class AuthorizeController {
 
     @Autowired
     private GithubProvider githubProvider;
+    @Autowired
+    private UserService userService;
 
     @Value("${github.Client_id}")
     private String Client_id;
@@ -31,6 +39,9 @@ public class AuthorizeController {
 
     @Autowired
     private Usermapper usermapper;
+    @Autowired
+    private QuerstionService querstionService;
+
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
@@ -57,8 +68,9 @@ public class AuthorizeController {
             user.setGmt_create(System.currentTimeMillis());
             user.setGmt_modified(user.getGmt_create());
             user.setAvatar_url(githubUser.getAvatar_url());
-            usermapper.insert(user);
-            request.getSession().setAttribute("user",githubUser);
+            //现向数据库判断是否有该用户
+            userService.addUser(user);
+            request.getSession().setAttribute("user",user);
             //写入cookie
             Cookie cookie= new Cookie("token",token);
             response.addCookie(cookie);
@@ -67,5 +79,18 @@ public class AuthorizeController {
         }else {
             return "redirect:/";
         }
+    }
+    @GetMapping("/login")
+    public String login(HttpServletRequest request,
+                        Model model,
+                        @RequestParam(name = "page",defaultValue = "1") Integer page,
+                        @RequestParam(name = "size",defaultValue = "5") Integer size,
+                        HttpServletResponse response){
+        Cookie cookie = new Cookie("token", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        request.getSession().setAttribute("user",null);
+        return "redirect:/";
     }
 }

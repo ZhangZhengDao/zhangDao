@@ -1,10 +1,8 @@
 package cn.zhang.com.mapper;
 
 import cn.zhang.com.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -19,4 +17,11 @@ public interface Usermapper {
 
     @Select("select * from user")
     List<User> select();
+
+    @Select("select * from user where account=#{account} ")
+    User findByAccount(@Param("account") String accout);
+
+    @Update("update user set token=#{token},gmt_create=#{gmt_create},gmt_modified=#{gmt_modified} where account=#{account}")
+    void updateUser(@Param("token") String token,@Param("gmt_create") Long gmt_create,@Param("gmt_modified") Long gmt_modified,@Param("account") String account);
+
 }

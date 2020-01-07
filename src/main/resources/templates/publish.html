@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>发布问题</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/bootstrap-theme.css">
-    <script src="js/bootstrap.min.js" type="application/javascript"></script>
-    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.css">
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <body style="background-color:gainsboro">
 <div th:include="index::copyright"></div>
@@ -27,8 +27,11 @@
                 </div>
                 <div class="form-group">
                     <label for="tag"> 添加标签</label>
-                    <input type="text" th:value="${tag}" class="form-control" th:name="tag" id="tag"
+                    <input type="text" th:value="${tag}"  class="form-control" th:name="tag" id="tag"
                            placeholder="输入标签 以',' 号隔开为一个标签"/>
+                </div>
+                <div class="form-group" th:if="${question!=null}">
+                    <input type="hidden" th:if="${question.getId()!=null}" th:value="${question.getId()}" th:name="id">
                 </div>
                 <div style="width: 100%" class="alert alert-danger"  th:text="${error}" th:if="${error!=null}"></div>
                 <div style="width: 100%"><button type="submit" class="btn btn-success" style="float: right">发起提问</button></div>
