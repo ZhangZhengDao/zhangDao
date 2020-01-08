@@ -2,10 +2,13 @@ package cn.zhang.com.service;
 
 import cn.zhang.com.dto.PaginationDTO;
 import cn.zhang.com.dto.QuestionDTO;
-import cn.zhang.com.mapper.Questionmapper;
-import cn.zhang.com.mapper.Usermapper;
+import cn.zhang.com.mapper.QuestionMapper;
+import cn.zhang.com.mapper.UserMapper;
 import cn.zhang.com.model.Question;
+import cn.zhang.com.model.QuestionExample;
 import cn.zhang.com.model.User;
+import cn.zhang.com.model.UserExample;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,17 +19,23 @@ import java.util.List;
 @Service
 public class QuerstionService {
 
-    @Autowired
-    private Usermapper usermapper;
-    @Autowired
-    private Questionmapper questionmapper;
+    @Autowired(required = false)
+    private UserMapper userMapper;
+    @Autowired(required = false)
+    private QuestionMapper questionMapper;
 
 
     public PaginationDTO select(String account, Integer page, Integer size){
         //定义格式
         Integer c=size*(page-1);
-        List<User> select = usermapper.select();
-        List<Question> select1 = questionmapper.select(c,size);
+        UserExample userExample=new UserExample();
+        userExample.createCriteria();//查询数据量
+        List<User> select = userMapper.selectByExample(userExample);
+        //查询所有数据
+        QuestionExample questionExample=new QuestionExample();
+        questionExample.createCriteria();
+        //分页 ，未完成
+        List<Question> select1 = questionMapper.selectByExampleWithRowbounds(questionExample,new RowBounds(c,size));
         List<QuestionDTO> questionDTOS=new ArrayList<QuestionDTO>();
         PaginationDTO paginationDTO = new PaginationDTO();
         for (Question question:select1){
@@ -34,15 +43,15 @@ public class QuerstionService {
                 if(StringUtils.equals(user.getId(),question.getCreator())){
                     //判断account是否为空，为空则表示不必根据当前用户查找值
                     if(StringUtils.isEmpty(account)) {
-                        QuestionDTO questionDTO = new QuestionDTO();
-                        BeanUtils.copyProperties(question, questionDTO);
+                        QuestionDTO questionDTO=new QuestionDTO();
+                        questionDTO.setQuestion(question);
                         questionDTO.setUser(user);
                         questionDTOS.add(questionDTO);
                     }
                     if(!StringUtils.isEmpty(account)) {
                         if (user.getAccount().equals(account)) {
-                            QuestionDTO questionDTO = new QuestionDTO();
-                            BeanUtils.copyProperties(question, questionDTO);
+                            QuestionDTO questionDTO=new QuestionDTO();
+                            questionDTO.setQuestion(question);
                             questionDTO.setUser(user);
                             questionDTOS.add(questionDTO);
                         }
@@ -51,18 +60,22 @@ public class QuerstionService {
             }
         }
         paginationDTO.setQuestionDTOS(questionDTOS);
-        Integer size1 = questionmapper.contion().size();
+        Integer size1 = (int) questionMapper.countByExample(new QuestionExample());
         paginationDTO.setPagination(size1,page,size);
         return paginationDTO;
     }
     public QuestionDTO getquestionDTO(Integer id){
-        Question id1 = questionmapper.findID(id);
-        List<User> select = usermapper.select();
+        QuestionExample questionExample=new QuestionExample();
+        questionExample.createCriteria().andIdEqualTo(id);
+        List<Question> id1 = questionMapper.selectByExample(questionExample);
+        UserExample userExample=new UserExample();
+        userExample.createCriteria();
+        List<User> select = userMapper.selectByExample(userExample);
         for (User user:select) {
-            if (StringUtils.equals(id1.getCreator(),user.getId())){
+            if (StringUtils.equals(id1.get(0).getCreator(),user.getId())){
                 QuestionDTO questionDTO=new QuestionDTO();
                 questionDTO.setUser(user);
-                BeanUtils.copyProperties(id1,questionDTO);
+                questionDTO.setQuestion(id1.get(0));
                 return questionDTO;
             }
         }
@@ -74,10 +87,14 @@ public class QuerstionService {
     //先判断数据库是否有当前id，有的话就表示要修该
         //等于空代表是添加，否则为修改
         if(question.getId()==null){
-            questionmapper.create(question);
+            questionMapper.insert(question);
         }else{
            //向数据库修改
-            questionmapper.Update(question);
+            Question question1=question;
+            question1.setGmtCreate(null);
+            QuestionExample questionExample=new QuestionExample();
+            questionExample.createCriteria().andIdEqualTo(question.getId());
+            questionMapper.updateByExampleSelective(question1,questionExample);
         }
 
     }

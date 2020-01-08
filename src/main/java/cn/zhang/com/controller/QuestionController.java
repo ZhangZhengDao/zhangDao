@@ -1,9 +1,7 @@
 package cn.zhang.com.controller;
 
 import cn.zhang.com.dto.QuestionDTO;
-import cn.zhang.com.mapper.Questionmapper;
 import cn.zhang.com.model.Question;
-import cn.zhang.com.model.User;
 import cn.zhang.com.service.QuerstionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,9 +34,9 @@ public class QuestionController {
         //拿到当前问题的id
         QuestionDTO questionDTO = querstionService.getquestionDTO(id);
         model.addAttribute("question",questionDTO);
-        model.addAttribute("title", questionDTO.getTitle());
-        model.addAttribute("description", questionDTO.getDescription());
-        model.addAttribute("tag", questionDTO.getTag());
+        model.addAttribute("title", questionDTO.getQuestion().getTitle());
+        model.addAttribute("description", questionDTO.getQuestion().getDescription());
+        model.addAttribute("tag", questionDTO.getQuestion().getTag());
         return "publish";
     }
 }

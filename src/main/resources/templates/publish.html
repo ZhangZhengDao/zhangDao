@@ -31,7 +31,7 @@
                            placeholder="输入标签 以',' 号隔开为一个标签"/>
                 </div>
                 <div class="form-group" th:if="${question!=null}">
-                    <input type="hidden" th:if="${question.getId()!=null}" th:value="${question.getId()}" th:name="id">
+                    <input type="hidden" th:if="${question.getQuestion().getId()!=null}" th:value="${question.getQuestion().getId()}" th:name="id">
                 </div>
                 <div style="width: 100%" class="alert alert-danger"  th:text="${error}" th:if="${error!=null}"></div>
                 <div style="width: 100%"><button type="submit" class="btn btn-success" style="float: right">发起提问</button></div>

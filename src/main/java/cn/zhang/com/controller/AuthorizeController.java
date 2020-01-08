@@ -3,7 +3,6 @@ package cn.zhang.com.controller;
 import cn.zhang.com.dto.AccessTokenDTO;
 import cn.zhang.com.dto.GithubUser;
 import cn.zhang.com.dto.PaginationDTO;
-import cn.zhang.com.mapper.Usermapper;
 import cn.zhang.com.model.User;
 import cn.zhang.com.provider.GithubProvider;
 import cn.zhang.com.service.QuerstionService;
@@ -38,8 +37,6 @@ public class AuthorizeController {
     private String Redirect_url;
 
     @Autowired
-    private Usermapper usermapper;
-    @Autowired
     private QuerstionService querstionService;
 
     @GetMapping("/callback")
@@ -65,11 +62,11 @@ public class AuthorizeController {
             String token=UUID.randomUUID().toString();
             user.setToken(token);
             user.setAccount(githubUser.getId()+"");
-            user.setGmt_create(System.currentTimeMillis());
-            user.setGmt_modified(user.getGmt_create());
-            user.setAvatar_url(githubUser.getAvatar_url());
+            user.setGmtCreate(System.currentTimeMillis());
+            user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(githubUser.getAvatar_url());
             //现向数据库判断是否有该用户
-            userService.addUser(user);
+            user=userService.addUser(user);
             request.getSession().setAttribute("user",user);
             //写入cookie
             Cookie cookie= new Cookie("token",token);

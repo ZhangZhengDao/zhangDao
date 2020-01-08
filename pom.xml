@@ -8,6 +8,7 @@
         <version>2.2.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>cn.zhang.com</groupId>
     <artifactId>zhang</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -78,6 +79,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!--实现分页需要引入插件-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.pagehelper</groupId>-->
+<!--            <artifactId>pagehelper-spring-boot-stater</artifactId>-->
+<!--            <version>1.2.10</version>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <build>
@@ -86,6 +95,21 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!--添加mybase依赖，更方便数据库的调用和编写-->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.47</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <!--同样也要再次引入当前数据库-->
         </plugins>
     </build>
 

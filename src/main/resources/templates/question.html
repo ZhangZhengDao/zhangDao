@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${question.getTitle()}"></title>
+    <title th:text="${question.getQuestion().getTitle()}"></title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
@@ -14,20 +14,20 @@
 <div class="container-fluid" style="margin: 0px 50px 50px  ;background-color: white">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
-            <h3><span class="glyphicon glyphicon glyphicon-bookmark" th:text="${question.getTitle()}" aria-hidden="true"></span> </h3>
+            <h3><span class="glyphicon glyphicon glyphicon-bookmark" th:text="${question.getQuestion().getTitle()}" aria-hidden="true"></span> </h3>
            <!-- <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.description}"></span>-->
-            <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.comment_count}" th:if="${question.comment_count!=null}"></span>
+            <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.getQuestion().getCommentCount()}" th:if="${question.getQuestion().getCommentCount()!=null}"></span>
             作者. <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.getUser().getName()}" ></span>
-            阅读数 .<span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${question.view_count==null}"></span>
-            <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.getView_count()}" th:if="${question.view_count!=null}"></span>
-            发布时间<span style="font-size: 12px;font-weight: normal;color: #999" th:text="${#dates.format(question.getGmt_create(),'yyyy-MM-dd HH:mm:ss')}"></span>
+            阅读数 .<span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${question.getQuestion().getViewCount()==null}"></span>
+            <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.getQuestion().getViewCount()}" th:if="${question.getQuestion().getViewCount()!=null}"></span>
+            发布时间<span style="font-size: 12px;font-weight: normal;color: #999" th:text="${#dates.format(question.getQuestion().getGmtModified(),'yyyy-MM-dd HH:mm:ss')}"></span>
             <hr>
             <!--内容行-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 20px"
-                 th:text="${question.getDescription()}"></div>
-            <a th:href="${'/questionBainji/'+question.getId()}" th:if="${session.user!=null}">
+                 th:text="${question.getQuestion().getDescription()}"></div>
+            <a th:href="${'/questionBainji/'+question.getQuestion().getId()}" th:if="${session.user!=null}">
                     <!--/*@thymesVar id="id" type=""*/-->
-                   <span class="glyphicon  glyphicon glyphicon-pencil " aria-hidden="true"  th:if="${session.user.id==question.getCreator()}" style="color:#999;font-size: 12px">编辑</span>
+                   <span class="glyphicon  glyphicon glyphicon-pencil " aria-hidden="true"  th:if="${session.user.id==question.getQuestion().getCreator()}" style="color:#999;font-size: 12px">编辑</span>
             </a>
             <hr>
         </div>
@@ -36,20 +36,20 @@
                 <h3>问题发起人</h3>
                 <div class="media">
                     <div class="media-left">
-                        <a th:href="${'/question/'+question.getId()}">
-                            <img style="width: 55px;height: 55px" class="img-rounded" th:src="@{${question.user.getAvatar_url()}}" >
+                        <a th:href="${'/question/'+question.getQuestion().getId()}">
+                            <img style="width: 55px;height: 55px" class="img-rounded" th:src="@{${question.user.getAvatarUrl()}}" >
                         </a>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading" th:text="${question.getTitle()}">用户名</h4>
-                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.getDescription()}"></span>
+                        <h4 class="media-heading" th:text="${question.getUser().getName()}">用户名</h4>
+                        <!--<span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.getQuestion().getDescription()}"></span>-->
                         <br>
-                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.description}"></span>
-                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.comment_count}" th:if="${question.comment_count!=null}"></span>
-                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${question.comment_count==null}"></span>个回复 .
-                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.view_count}" th:if="${question.view_count!=null}"></span>
-                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${question.view_count==null}"></span>次浏览 .
-                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${#dates.format(question.getGmt_create(),'mm:HH dd MMM yyyy')}"></span>
+                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.getQuestion().description}"></span>
+                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.getQuestion().getCommentCount()}" th:if="${question.getQuestion().getCommentCount()!=null}"></span>
+                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${question.getQuestion().getCommentCount()==null}"></span>个回复 .
+                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${question.getQuestion().getViewCount()}" th:if="${question.getQuestion().getViewCount()!=null}"></span>
+                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${question.getQuestion().getViewCount()==null}"></span>次浏览 .
+                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${#dates.format(question.getQuestion().getGmtModified(),'mm:HH dd MMM yyyy')}"></span>
                     </div>
                 </div>
             </div>

@@ -20,20 +20,20 @@
             <!--内容行-->
             <div class="media" th:each="a : ${list.questionDTOS}">
                 <div class="media-left">
-                    <a href="#">
-                        <img style="width: 55px;height: 55px" class="img-rounded" th:src="@{${a.user.getAvatar_url()}}" >
+                    <a th:href="${'/question/'+a.getQuestion().getId()}">
+                        <img style="width: 55px;height: 55px" class="img-rounded" th:src="@{${a.user.getAvatarUrl()}}" >
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${a.getTitle()}">用户名</h4>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getDescription()}"></span>
+                    <h4 class="media-heading" th:text="${a.getQuestion().getTitle()}">用户名</h4>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getQuestion().getDescription()}"></span>
                     <br>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.description}"></span>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.comment_count}" th:if="${a.comment_count!=null}"></span>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${a.comment_count==null}"></span>个回复 .
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.view_count}" th:if="${a.view_count!=null}"></span>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${a.view_count==null}"></span>次浏览 .
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${#dates.format(a.getGmt_create(),'mm:HH dd MMM yyyy')}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getQuestion().description}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getQuestion().getCommentCount()}" th:if="${a.getQuestion().getCommentCount()!=null}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${a.getQuestion().getCommentCount()==null}"></span>个回复 .
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getQuestion().getViewCount()}" th:if="${a.getQuestion().getViewCount()!=null}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${a.getQuestion().getViewCount()==null}"></span>次浏览 .
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${#dates.format(a.getQuestion().getGmtCreate(),'mm:HH dd MMM yyyy')}"></span>
                     <hr>
                 </div>
             </div>
