@@ -2,6 +2,7 @@ package cn.zhang.com.controller;
 
 import cn.zhang.com.dto.QuestionDTO;
 import cn.zhang.com.model.Question;
+import cn.zhang.com.model.User;
 import cn.zhang.com.service.QuerstionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

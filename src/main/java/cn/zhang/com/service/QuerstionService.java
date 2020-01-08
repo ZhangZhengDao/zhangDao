@@ -40,7 +40,6 @@ public class QuerstionService {
         PaginationDTO paginationDTO = new PaginationDTO();
         for (Question question:select1){
         for (User user:select) {
-                if(StringUtils.equals(user.getId(),question.getCreator())){
                     //判断account是否为空，为空则表示不必根据当前用户查找值
                     if(StringUtils.isEmpty(account)) {
                         QuestionDTO questionDTO=new QuestionDTO();
@@ -56,7 +55,6 @@ public class QuerstionService {
                             questionDTOS.add(questionDTO);
                         }
                     }
-                }
             }
         }
         paginationDTO.setQuestionDTOS(questionDTOS);
@@ -71,15 +69,21 @@ public class QuerstionService {
         UserExample userExample=new UserExample();
         userExample.createCriteria();
         List<User> select = userMapper.selectByExample(userExample);
+        QuestionDTO questionDTO=new QuestionDTO();
         for (User user:select) {
             if (StringUtils.equals(id1.get(0).getCreator(),user.getId())){
-                QuestionDTO questionDTO=new QuestionDTO();
                 questionDTO.setUser(user);
                 questionDTO.setQuestion(id1.get(0));
                 return questionDTO;
             }
         }
-        return null;
+        //如果找不到用户则判断情况
+        User user = new User();
+        user.setName("此用户以注销");
+        user.setAvatarUrl(null);
+        questionDTO.setUser(user);
+        questionDTO.setQuestion(id1.get(0));
+        return questionDTO;
     }
 
     //判断添加还是修改
