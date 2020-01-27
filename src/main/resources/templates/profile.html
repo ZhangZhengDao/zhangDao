@@ -7,44 +7,96 @@
     <link rel="stylesheet" href="/css/bootstrap-theme.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/dianji.js"></script>
 
 </head>
 <body style="background-color:gainsboro">
 <div th:include="index::copyright"></div>
 <div class="container-fluid" style="margin: 0px 50px 50px 50px ;background-color: white">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
-            <h2><span class="glyphicon glyphicon glyphicon-baby-formula" th:text="${modelName}" aria-hidden="true"></span> </h2>
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon glyphicon-baby-formula" th:text="${modelName}"
+                      aria-hidden="true"></span></h2>
             <hr>
             <!--内容行-->
             <!--内容行-->
-            <div class="media" th:each="a : ${list.questionDTOS}">
+            <div class="media" th:each="a : ${list.questionDTOS}" th:if="${modelName.equals('我的提问')}">
                 <div class="media-left">
                     <a th:href="${'/question/'+a.getQuestion().getId()}">
-                        <img style="width: 55px;height: 55px" class="img-rounded" th:src="@{${a.user.getAvatarUrl()}}" >
+                        <img style="width: 55px;height: 55px" class="img-rounded" th:src="@{${a.user.getAvatarUrl()}}">
                     </a>
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading" th:text="${a.getQuestion().getTitle()}">用户名</h4>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getQuestion().getDescription()}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999"
+                          th:text="${a.getQuestion().getDescription()}"></span>
                     <br>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getQuestion().description}"></span>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getQuestion().getCommentCount()}" th:if="${a.getQuestion().getCommentCount()!=null}"></span>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${a.getQuestion().getCommentCount()==null}"></span>个回复 .
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${a.getQuestion().getViewCount()}" th:if="${a.getQuestion().getViewCount()!=null}"></span>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0" th:if="${a.getQuestion().getViewCount()==null}"></span>次浏览 .
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="${#dates.format(a.getQuestion().getGmtCreate(),'mm:HH dd MMM yyyy')}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999"
+                          th:text="${a.getQuestion().description}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999"
+                          th:text="${a.getQuestion().getCommentCount()}"
+                          th:if="${a.getQuestion().getCommentCount()!=null}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0"
+                          th:if="${a.getQuestion().getCommentCount()==null}"></span>个回复 .
+                    <span style="font-size: 12px;font-weight: normal;color: #999"
+                          th:text="${a.getQuestion().getViewCount()}"
+                          th:if="${a.getQuestion().getViewCount()!=null}"></span>
+                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0"
+                          th:if="${a.getQuestion().getViewCount()==null}"></span>次浏览 .
+                    <span style="font-size: 12px;font-weight: normal;color: #999"
+                          th:text="${#dates.format(a.getQuestion().getGmtModified(),'mm:HH dd MMM yyyy')}"></span>
+                    <a th:href="${'/questionBainji/'+a.getQuestion().getId()}" class="glyphicon glyphicon-pencil" style="font-size: 12px;font-weight: normal;color: #999;cursor: pointer;">编辑</a>
                     <hr>
                 </div>
             </div>
-            <nav aria-label="Page navigation">
+            <nav aria-label="Page navigation" th:if="${modelName.equals('我的提问')}">
                 <ul class="pagination">
                     <li>
                         <a href="#" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li><a th:href="@{/(page=${a})}" href="#"  th:each="a : ${list.pages}" th:text="${a}"></a></li>
+                    <li><a th:href="@{/profile/action/(page=${a})}"  th:each="a : ${list.pages}" th:text="${a}"></a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!--我的回复-->
+            <div class="panel panel-default" th:if="${modelName.equals('最新回复')&&zhang!=null}">
+                <table class="table table-hover" >
+                    <tr th:each="a:${zhang.getNotFicationAndUserDTOlist()}" style="cursor: pointer">
+                        <td th:data-id="${a.getNotiFication().getId()}" onclick="dianji(this)" style="width: 95%">
+                            <div class="panel-body" style="margin: -10px">
+                                <span class=" glyphicon glyphicon-user " style="color: #9acfea"></span>
+                                <span>用户:</span>
+                                <span style="margin: 5px 0px;font-size: 20px" th:text="${a.getUser().getName()}"></span>
+                                <span style="margin-left: 10px" class="glyphicon glyphicon-send"></span>
+                                <span th:if="${a.getNotiFication().getType()==1}">
+                        <span><strong>回复了你的问题:</strong></span>
+                    </span>
+                                <span th:if="${a.getNotiFication().getType()==2}">
+                        <span><strong>评论了你的回复:</strong></span>
+                    </span>
+                                <em><strong class="text-primary" th:text="${a.getQuestion().getTitle()}"></strong></em>
+                            </div>
+                        </td>
+                        <td >
+                            <span class="label label-warning ">未读</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <nav aria-label="Page navigation" th:if="${modelName.equals('最新回复')&&zhang!=null}">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                   <li><a th:href="@{/profile/zuixinhuifu(page=${a})}" href="#" th:each="a : ${zhang.getYigong()}" th:text="${a}"></a></li>
                     <li>
                         <a href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -57,10 +109,10 @@
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" style="margin-top: 20px">
             <div class="list-group section">
                 <a href="/profile/action"
-                   th:class="${model =='action'}? 'active list-group-item' : 'list-group-item'">我的问题    <span class="badge">14</span></a>
+                   th:class="${model =='action'}? 'active list-group-item' : 'list-group-item'">我的问题</a>
                 <a href="/profile/zuixinhuifu"
                    th:class="${model =='zuixinhuifu'}? 'active list-group-item' : 'list-group-item'">最新回复
-                    <span class="badge">14</span>
+                    <span class="badge" th:text="${session.tongzhi}">14</span>
                 </a>
             </div>
         </div>

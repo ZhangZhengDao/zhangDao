@@ -4,6 +4,7 @@ import cn.zhang.com.mapper.UserMapper;
 import cn.zhang.com.model.Question;
 import cn.zhang.com.model.User;
 import cn.zhang.com.model.UserExample;
+import cn.zhang.com.service.NotFicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -18,22 +19,30 @@ import java.util.List;
 public class SessionInterceptor implements HandlerInterceptor {
     @Autowired(required = false)
     private UserMapper userMapper;
+
+    @Autowired
+    private NotFicationService notFicationService;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
         Question question = new Question();
-        if(cookies!=null) {
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("token")) {
                     String token = cookie.getValue();
                     //向数据库查询
-                    UserExample userExample=new UserExample();
+                    UserExample userExample = new UserExample();
                     userExample.createCriteria().andTokenEqualTo(token);
                     List<User> users = userMapper.selectByExample(userExample);
-                    if (users.size()!=0) {
-                     request.getSession().setAttribute("user",users.get(0));
+                    if (users.size() != 0) {
+                        request.getSession().setAttribute("user", users.get(0));
+                        /*向数据库查询当前用户的未读通知数*/
+                        Integer c=notFicationService.getNotFsize(users.get(0).getAccount());
+                        request.getSession().setAttribute("tongzhi",c);
                         return true;
                     }
+                    return true;
                 }
             }
         }

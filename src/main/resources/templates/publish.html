@@ -5,46 +5,89 @@
     <title>发布问题</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.css">
+
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/typenone.js"></script>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/addbiaoqian.js"></script>
+    <script src="/js/biaoqianku.js"></script>
+    <script src="/js/editormd.min.js"></script>
+    <link rel="stylesheet" href="/css/editormd.min.css">
+
 </head>
+<script>
+</script>
 <body style="background-color:gainsboro">
 <div th:include="index::copyright"></div>
-<div class="container-fluid" style="margin: 50px 50px 50px 50px ;background-color: lavender">
+<div class="container-fluid" style="margin: 50px 50px 50px 50px ;background-color: white">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon glyphicon-tags" aria-hidden="true"></span> 发起提问</h2>
             <hr>
             <form action="/publish" method="post">
                 <div class="form-group">
-                    <label for="title" > 提问标题</label>
+                    <label for="title"> 提问标题</label>
                     <input type="text" class="form-control" th:name="title" th:value="${title}" id="title"
                            placeholder="清晰明了输入提问标题，以便回答者更好理解"/>
                 </div>
-                <div class="form-group">
-                    <label for="description" > 提问内容</label>
-                    <textarea class="form-control" name="description" th:text="${description}" id="description" cols="30" rows="10"></textarea>
+                <div class="form-group" id="question-editor">
+                    <label for="description"> 提问内容</label>
+                    <textarea class="form-control" style="display: none" name="description" th:text="${description}" id="description"
+                              cols="30" rows="10"></textarea>
                 </div>
+                <script type="text/javascript">
+                    $(function () {
+                        var editor=editormd("question-editor",{
+                            width:"100%",
+                            height:"350px",
+                            path:"/js/lib/",
+                            delay: 0,
+                            watch: false,
+                            placeContent:"请输入问题内容和描述",
+                            imageUpload: true,//开启图片上传功能
+                            imageUploadURL: "/file/upload",
+                            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"]
+                        });
+                    });
+                </script>
+
                 <div class="form-group">
                     <label for="tag"> 添加标签</label>
-                    <input type="text" th:value="${tag}"  class="form-control" th:name="tag" id="tag"
-                           placeholder="输入标签 以',' 号隔开为一个标签"/>
+                    <input type="text" th:value="${tag}" class="form-control" th:name="tag" id="tag"
+                           placeholder="输入标签 以',' 号隔开为一个标签" onclick="biaoqianku()"/>
+                </div>
+                <!-标签库-->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-left: -20px;display: none" id="biaoqiankushow">
+                    <ul class=" nav nav-tabs"  >
+                        <li role="presentation" th:id="'li'+${a.type}" style="cursor: pointer;" th:each="a:${ccc}"><a th:text="${a.type}" th:data-id="${a.type}" onclick="typenone(this)">Home</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--标签下内容-->
+                <div class="tab-content">
+                <div th:each="a:${ccc}" th:id="${a.type}" style="display: none;margin-top: 5px;" >
+                    <span style="cursor: pointer"><span th:data-id="${c}" onclick="addbiaoqian(this)" class="label label-info" style="margin-right: 5px;" th:each="c:${a.getName()}" th:text="${c}"></span></span>
+                </div>
+                </div>
+                <div style="width: 100%">
+                    <button type="submit" class="btn btn-success" style="float: right">发起提问</button>
                 </div>
                 <div class="form-group" th:if="${question!=null}">
-                    <input type="hidden" th:if="${question.getQuestion().getId()!=null}" th:value="${question.getQuestion().getId()}" th:name="id">
+                    <input type="hidden" th:if="${question.getQuestion().getId()!=null}"
+                           th:value="${question.getQuestion().getId()}" th:name="id">
                 </div>
-                <div style="width: 100%" class="alert alert-danger"  th:text="${error}" th:if="${error!=null}"></div>
-                <div style="width: 100%"><button type="submit" class="btn btn-success" style="float: right">发起提问</button></div>
-               <!-- <p><button type="button" class="btn btn-default btn-lg active" style="float: right">匿名发布</button></p>-->
+                <div id="biaoqianerror" style="width: 100%" class="alert alert-danger" th:text="${error}" th:if="${error!=null}"></div>
+                <!-- <p><button type="button" class="btn btn-default btn-lg active" style="float: right">匿名发布</button></p>-->
             </form>
         </div>
-        <h3 class="col-lg-3 col-md-12 col-sm-12 col-xs-12"  style="margin: 50px 50px 50px 50px ">
+        <h3 class="col-lg-3 col-md-12 col-sm-12 col-xs-12" style="margin: 50px 50px 50px 50px ">
             <h3>问题发起指南</h3>
             • 问题标题: 请用精简的语言描述您发布的问题，不超过25字
             • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料
             • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字
         </h3>
-        </div>
+    </div>
 </div>
 </body>
 </html>

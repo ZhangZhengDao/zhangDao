@@ -9,6 +9,10 @@ bootstrap 可借助网址观看api
 http://www.mawen.co/publish
 ##发送post请求运用了新模式 okhttp
 网址：https://square.github.io/okhttp/  
+##meditor插件地址
+http://editor.md.ipandao.com  
+##图标网站
+wwww.iconfont.cn  
 发送post请求方式    
 
      public String getAccessToken(AccessTokenDTO accessTokenDTO) {
@@ -45,6 +49,7 @@ http://www.mawen.co/publish
                     return null;
                 }
 git登录以实现  
+
 ###使用mybatis.generator
     <build>
         <plugins>

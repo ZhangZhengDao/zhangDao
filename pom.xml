@@ -56,16 +56,23 @@
             <version>1.16.4</version>
         </dependency>
         <!--自动部署依赖-->
-       <!-- <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>-->
+        <!-- <dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-devtools</artifactId>
+             <optional>true</optional>
+         </dependency>-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.47</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <!--写代码时用到的工具包写代码更方便-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
         </dependency>
 
         <dependency>
@@ -81,11 +88,11 @@
         </dependency>
 
         <!--实现分页需要引入插件-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.pagehelper</groupId>-->
-<!--            <artifactId>pagehelper-spring-boot-stater</artifactId>-->
-<!--            <version>1.2.10</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.github.pagehelper</groupId>-->
+        <!--            <artifactId>pagehelper-spring-boot-stater</artifactId>-->
+        <!--            <version>1.2.10</version>-->
+        <!--        </dependency>-->
 
     </dependencies>
 

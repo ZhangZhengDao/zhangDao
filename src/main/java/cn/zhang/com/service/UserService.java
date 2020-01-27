@@ -5,6 +5,7 @@ import cn.zhang.com.model.User;
 import cn.zhang.com.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 
@@ -12,19 +13,26 @@ import java.util.List;
 public class UserService {
     @Autowired(required = false)
     private UserMapper userMapper;
-    public  User addUser(User user) {
+
+    public User addUser(User user) {
         //向数据查询是否有该用户
-        UserExample userExample=new UserExample();
+        if(user.getAccount()==null){
+            return null;
+        }
+        UserExample userExample = new UserExample();
         userExample.createCriteria().andAccountEqualTo(user.getAccount());
         List<User> users = userMapper.selectByExample(userExample);
-        if (users.size()==0){
+        if (users.size() == 0) {
             userMapper.insert(user);
-        }else{
+        } else {
             User user1 = new User();
             user1.setAvatarUrl(user.getAvatarUrl());
             user1.setToken(user1.getToken());
             user1.setAccount(user.getAccount());
             user1.setName(user.getName());
+            if (StringUtils.isEmpty(user1.getName())){
+                return null;
+            }
             UserExample example = new UserExample();
             example.createCriteria().andAccountEqualTo(user.getAccount());
             userMapper.updateByExampleSelective(user1, example);
