@@ -63,8 +63,12 @@ public class NotFicationService {
         System.out.println(users.toString());
         NoitPaginationDTO noitPaginationDTO=new NoitPaginationDTO();
         NotiFicationExample example = new NotiFicationExample();
-        example.createCriteria().andReceiverEqualTo(users.get(0).getId().longValue()).andStatusEqualTo(0);//零为未读状态
-        return notiFicationMapper.selectByExample(example).size();
+        if (users.size()!=0){
+            example.createCriteria().andReceiverEqualTo(users.get(0).getId().longValue()).andStatusEqualTo(0);//零为未读状态
+            return notiFicationMapper.selectByExample(example).size();
+        }
+        System.out.println("azhang");
+        return 0;
     }
 
     /*根据消息表id，变更信息*/

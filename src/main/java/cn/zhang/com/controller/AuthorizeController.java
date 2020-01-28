@@ -78,14 +78,14 @@ public class AuthorizeController {
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatar_url());
-            /*向数据库查询当前用户的未读通知数*/
-            Integer c=notFicationService.getNotFsize(user.getAccount());
-            request.getSession().setAttribute("tongzhi",c);
             //现向数据库判断是否有该用户
             user = userService.addUser(user);
             if (user==null){
                 return "redirect:/";
             }
+            /*向数据库查询当前用户的未读通知数*/
+            Integer c=notFicationService.getNotFsize(user.getAccount());
+            request.getSession().setAttribute("tongzhi",c);
             request.getSession().setAttribute("user", user);
             //写入cookie
             Cookie cookie = new Cookie("token", user.getToken());
