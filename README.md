@@ -13,6 +13,15 @@ http://www.mawen.co/publish
 http://editor.md.ipandao.com  
 ##图标网站
 wwww.iconfont.cn  
+##将项目部署到云端
+更新服务器 yum update  
+下载git yum install git  
+创建文件夹 mkdir App   
+将项目复制 cd App  
+git clone https://github.com/ZhangZhengDao/zhang.git    
+将项目打包成jar包形式  
+mvn compile package  
+java -jar target/zhang-0.0.1-SNAPSHOT.jar
 发送post请求方式    
 
      public String getAccessToken(AccessTokenDTO accessTokenDTO) {
