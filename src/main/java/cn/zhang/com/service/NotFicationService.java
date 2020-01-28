@@ -57,7 +57,10 @@ public class NotFicationService {
     public Integer getNotFsize(String account) {
         UserExample example1 = new UserExample();
         example1.createCriteria().andAccountEqualTo(account);
+        System.out.println("我要向数据库查询了");
         List<User> users = userMapper.selectByExample(example1);
+        System.out.println("查询成功");
+        System.out.println(users.toString());
         NoitPaginationDTO noitPaginationDTO=new NoitPaginationDTO();
         NotiFicationExample example = new NotiFicationExample();
         example.createCriteria().andReceiverEqualTo(users.get(0).getId().longValue()).andStatusEqualTo(0);//零为未读状态
