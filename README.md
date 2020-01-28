@@ -13,14 +13,19 @@ http://www.mawen.co/publish
 http://editor.md.ipandao.com  
 ##图标网站
 wwww.iconfont.cn  
-##将项目部署到云端
+##将项目部署到云端  
+查看所有端口  
+netstat -tlunp  
 更新服务器 yum update  
-下载git yum install git  
+下载git yum install git    
+mysql安装教程 https://www.cnblogs.com/Jomini/p/10749657.html  
 创建文件夹 mkdir App   
 将项目复制 cd App  
 git clone https://github.com/ZhangZhengDao/zhang.git    
 将项目打包成jar包形式  
 mvn compile package  
+  删除目录命令  
+  rm -rf   
 java -jar target/zhang-0.0.1-SNAPSHOT.jar
 发送post请求方式    
 
