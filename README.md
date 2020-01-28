@@ -19,6 +19,7 @@ netstat -tlunp
 更新服务器 yum update  
 下载git yum install git    
 mysql安装教程 https://www.cnblogs.com/Jomini/p/10749657.html  
+  https://www.cnblogs.com/Ai-Hen-Jiao-zhi/p/9600621.html  
 创建文件夹 mkdir App   
 将项目复制 cd App  
 git clone https://github.com/ZhangZhengDao/zhang.git    
