@@ -46,12 +46,33 @@ public class QuerstionService {
         select1 = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(c, size));
         Long getzongshu = null;
         if (!StringUtils.equals(sousuo, "false") && !StringUtils.isEmpty(sousuo)) {
-            System.out.println(sousuo);
             String[] sql = sousuo.split(" ");
+            //用正则表达之匹配需要转以
+            for (int i = 0; i < sql.length; i++) {
+                /** . ? + $ ^ [ ] ( ) { } | \ /*/
+                if (StringUtils.equals(sql[i],"*")||
+                        StringUtils.equals(sql[i],"*")||
+                        StringUtils.equals(sql[i],".")||
+                        StringUtils.equals(sql[i],"?")||
+                        StringUtils.equals(sql[i],"$")||
+                        StringUtils.equals(sql[i],"+")||
+                        StringUtils.equals(sql[i],"^")||
+                        StringUtils.equals(sql[i],"[")||
+                        StringUtils.equals(sql[i],"]")||
+                        StringUtils.equals(sql[i],"(")||
+                        StringUtils.equals(sql[i],")")||
+                        StringUtils.equals(sql[i],"{")||
+                        StringUtils.equals(sql[i],"}")||
+                        StringUtils.equals(sql[i],"|")||
+                        StringUtils.equals(sql[i],"\\")||
+                        StringUtils.equals(sql[i],"/")){
+                    sql[i]="\\"+sql[i];
+                }
+            }
             String collect = Arrays.stream(sql).collect(Collectors.joining("|"));
             Question question = new Question();
             question.setTitle(collect);
-             getzongshu = questionExtMapper.getzongshu(question);
+            getzongshu = questionExtMapper.getzongshu(question);
             select1 = questionExtMapper.getLike(question,new RowBounds(c,size));
         }
         List<QuestionDTO> questionDTOS = new ArrayList<QuestionDTO>();

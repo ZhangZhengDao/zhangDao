@@ -20,6 +20,9 @@ netstat -tlunp
 下载git yum install git    
 mysql安装教程 https://www.cnblogs.com/Jomini/p/10749657.html  
   https://www.cnblogs.com/Ai-Hen-Jiao-zhi/p/9600621.html  
+关掉进程  
+tcp 0 0 0.0.0.0:8080 0.0.0.0:* LISTEN 28937/java  
+kill -9 28937
 创建文件夹 mkdir App   
 将项目复制 cd App  
 git clone https://github.com/ZhangZhengDao/zhang.git    
