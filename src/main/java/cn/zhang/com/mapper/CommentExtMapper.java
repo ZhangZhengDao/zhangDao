@@ -16,5 +16,8 @@ public interface CommentExtMapper {
     @Bean
     @Update("UPDATE cc SET comment_count=comment_count+1 WHERE id=#{id}")
    public void upda(@Param("id") Integer id);
-
+    @Update("UPDATE cc SET like_count=like_count+1 WHERE id=#{id}")
+    public void addupdate(@Param("id") Integer id);
+    @Update("UPDATE cc SET like_count=like_count-1 WHERE id=#{id}")
+    public void jian(@Param("id") Integer id);
 }

@@ -2,10 +2,7 @@ package cn.zhang.com.service;
 
 import cn.zhang.com.dto.NoitPaginationDTO;
 import cn.zhang.com.dto.NotFicationAndUserDTO;
-import cn.zhang.com.mapper.CommentMapper;
-import cn.zhang.com.mapper.NotiFicationMapper;
-import cn.zhang.com.mapper.QuestionMapper;
-import cn.zhang.com.mapper.UserMapper;
+import cn.zhang.com.mapper.*;
 import cn.zhang.com.model.*;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +24,8 @@ public class NotFicationService {
     private QuestionMapper questionMapper;
     @Autowired
     private CommentMapper commentMapper;
+    @Autowired
+    private CommentExtMapper commentExtMapper;
     /*根据当前用用户信息拿到所有用户未读信息*/
     public NoitPaginationDTO getWeidu(User user, Integer page, Integer size) {
         NoitPaginationDTO noitPaginationDTO=new NoitPaginationDTO();
@@ -57,10 +56,7 @@ public class NotFicationService {
     public Integer getNotFsize(String account) {
         UserExample example1 = new UserExample();
         example1.createCriteria().andAccountEqualTo(account);
-        System.out.println("我要向数据库查询了");
         List<User> users = userMapper.selectByExample(example1);
-        System.out.println("查询成功");
-        System.out.println(users.toString());
         NoitPaginationDTO noitPaginationDTO=new NoitPaginationDTO();
         NotiFicationExample example = new NotiFicationExample();
         if (users.size()!=0){

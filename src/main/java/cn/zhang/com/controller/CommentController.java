@@ -5,12 +5,6 @@ import cn.zhang.com.dto.CommentDTO;
 import cn.zhang.com.dto.CommenterDTO;
 import cn.zhang.com.dto.ResultDTO;
 import cn.zhang.com.exception.CustomizeErrorCode;
-import cn.zhang.com.exception.CustomizeException;
-import cn.zhang.com.mapper.CommentMapper;
-import cn.zhang.com.mapper.QuestionExtMapper;
-import cn.zhang.com.model.Comment;
-import cn.zhang.com.model.CommentExample;
-import cn.zhang.com.model.QuestionExample;
 import cn.zhang.com.model.User;
 import cn.zhang.com.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /*评论*/
 @Controller
@@ -52,7 +44,8 @@ public class CommentController {
     @ResponseBody
     @RequestMapping(value = "/getCommenter/{id}", method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public ResultDTO<CommentControllerDTO> getCommenter(@PathVariable Long id,HttpServletRequest request) {//此注解可以将参数通过反射自动封装到对象中
-        List<CommentControllerDTO> comment=commentService.getList(id,2);
+        User user = (User) request.getSession().getAttribute("user");
+        List<CommentControllerDTO> comment=commentService.getList(id,2, user);
         return new ResultDTO().okofer(comment);
     }
 

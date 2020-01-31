@@ -1,10 +1,16 @@
 package cn.zhang.com.controller;
 
+import cn.zhang.com.dto.ResultDTO;
+import cn.zhang.com.exception.CustomizeErrorCode;
+import cn.zhang.com.model.User;
+import cn.zhang.com.service.DianzanService;
 import cn.zhang.com.service.NotFicationService;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,7 +18,9 @@ import javax.servlet.http.HttpServletRequest;
 public class NotController {
     @Autowired
     private NotFicationService notFicationService;
-
+    @Autowired
+    private DianzanService dianzanService;
+    //根据id判断消息是否为已读状态
     @GetMapping("/NotController/{id}")
     private String tongzhi(@PathVariable(name = "id") Integer id, HttpServletRequest request){
         /*更改已读未读状态，返回值为问题的id*/
@@ -21,5 +29,23 @@ public class NotController {
         Integer tongzhi= (Integer) request.getSession().getAttribute("tongzhi");
         request.getSession().setAttribute("tongzhi",tongzhi-1);
         return "redirect:/question/"+panid;
+    }
+    //根据回复id点赞
+    @ResponseBody
+    @RequestMapping(value = "/adddianzan", method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public Object dianzanadd(@RequestBody JSONObject jsonObject,HttpServletRequest request){
+        System.out.println("fefefefef");
+        User user = (User) request.getSession().getAttribute("user");
+        //当前用户为空的话提示用户登录
+        if (user==null) {
+            return ResultDTO.denglu(CustomizeErrorCode.NO_LOGIN);
+        }
+        //获取到了要点赞的回复id
+        String l=jsonObject.get("id").toString();
+        System.out.println(l);
+        Integer integer = dianzanService.DianzanPanDuan(Integer.valueOf(l), user);
+        System.out.println(integer+"{");
+        jsonObject.put("id",integer);
+        return jsonObject;
     }
 }

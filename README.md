@@ -20,6 +20,11 @@ netstat -tlunp
 下载git yum install git    
 mysql安装教程 https://www.cnblogs.com/Jomini/p/10749657.html  
   https://www.cnblogs.com/Ai-Hen-Jiao-zhi/p/9600621.html  
+
+mysql打开远程链接权限
+
+https://blog.csdn.net/h985161183/article/details/82218710
+
 关掉进程  
 tcp 0 0 0.0.0.0:8080 0.0.0.0:* LISTEN 28937/java  
 kill -9 28937

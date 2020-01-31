@@ -48,7 +48,6 @@ public class AuthorizeController {
                            HttpServletResponse response) {
         /*判断是否已经有了cookie值*/
         User user2=(User) request.getSession().getAttribute("user");
-        System.out.println(user2+"]");
         if (user2!=null){
             return "redirect:/";
         }
@@ -62,9 +61,7 @@ public class AuthorizeController {
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         //解析返回值 System.out.println(githubUser.toString());
         GithubUser githubUser = githubProvider.getUser(accessToken);
-        System.out.println(githubUser.toString()+"}");
         if (githubUser.getName()==null){
-            System.out.println(githubUser.toString()+"ererer");
             return "redirect:https://github.com/login/oauth/authorize?client_id=43eadde0b6dd72f33590&redirect_url=http://localhost:8887//callback&scope=user&state=1";
         }
         if (!githubUser.getName().isEmpty()) {

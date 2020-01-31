@@ -86,7 +86,9 @@
                         <div style="color: #999;margin-top: 10px;" class="mun">
                             <h4>
                                 <!--点赞图标-->
-                                <span class="glyphicon glyphicon-thumbs-up iun" th:text="${a.getComment().getLikeCount()}" aria-hidden="true" style="margin-right: 10px;" th:data-id="${a.getComment().getId()}" onclick="dianzan(this)"></span>
+                                <!--点赞了--> <span th:if="${a.getDianzan()!=null&&a.getDianzan().getZhaunttai()==1}"  class="glyphicon glyphicon-thumbs-up iun dian"  th:id="eeec+${a.getComment().getId()}"  th:text="${a.getComment().getLikeCount()}" aria-hidden="true" style="margin-right: 10px;" th:data-id="${a.getComment().getId()}" onclick="dianzan(this)"></span>
+                                <!--未点赞--><span th:if="${a.getDianzan()==null}"class="glyphicon glyphicon-thumbs-up iun" th:id="eeec+${a.getComment().getId()
+                                }"  th:text="${a.getComment().getLikeCount()}" aria-hidden="true" style="margin-right: 10px;" th:data-id="${a.getComment().getId()}" onclick="dianzan(this)"></span>
                                 <!--评论图标-->
                                 <span class="glyphicon glyphicon-comment iun" th:data-id="${a.getComment().getId()}" onclick="get(this)" th:text="${a.getComment().getCommentCount()}"></span>
                                 <!--时间-->

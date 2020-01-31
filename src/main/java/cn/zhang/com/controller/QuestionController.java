@@ -31,8 +31,10 @@ public class QuestionController {
         //拿到当前问题的id的内容
         QuestionDTO questionDTO = querstionService.getquestionDTO(id);
         long L=id;
+        /*当前用户是否点赞需要用户信息，判断用户是否登录*/
+        User user= (User) request.getSession().getAttribute("user");
         //拿到所有回复的问题
-        List<CommentControllerDTO> comment=commentService.getList(L,1);
+        List<CommentControllerDTO> comment=commentService.getList(L,1,user);
         //mysql正则表达式模糊匹配
         List<Question> questions=querstionService.likegetListCommentType2(questionDTO);
         model.addAttribute("likeType2",questions);

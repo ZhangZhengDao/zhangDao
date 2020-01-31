@@ -9,7 +9,7 @@
         <!--可以实现分页的标签-->
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://106.75.37.151:3306/Test?useSSL=false"
+                        connectionURL="jdbc:mysql://106.75.80.178:3306/Test?useSSL=false"
                         userId="root"
                         password="Passwd123!">
         </jdbcConnection>
@@ -36,5 +36,6 @@
         <table tableName="question" domainObjectName="Question"></table>
         <table tableName="cc" domainObjectName="Comment"></table>
         <table tableName="notification" domainObjectName="NotiFication"></table>
+        <table tableName="dianzan" domainObjectName="Dianzan"></table>
     </context>
 </generatorConfiguration>

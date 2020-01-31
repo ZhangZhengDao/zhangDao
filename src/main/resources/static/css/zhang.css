@@ -4,7 +4,16 @@
 .mun .iun:hover{
     color: #499ef3;
 }
+.true {
+    color: #499ef3;
+}
+.false {
+    color: #999;
+}
 .pinglun{
     margin-bottom: 15px;
     border-bottom: 1px solid #999999;
+}
+.mun .dian{
+    color: #499ef3;
 }

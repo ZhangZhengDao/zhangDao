@@ -3,11 +3,11 @@ package cn.zhang.com.service;
 import cn.zhang.com.dto.CommentControllerDTO;
 import cn.zhang.com.dto.CommentDTO;
 import cn.zhang.com.dto.CommenterDTO;
+import cn.zhang.com.enums.DianzanEum;
 import cn.zhang.com.enums.NotificationEnum;
 import cn.zhang.com.mapper.*;
 import cn.zhang.com.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
@@ -34,7 +34,8 @@ public class CommentService {
     private CommentExtMapper commentExtMapper;
     @Autowired
     private NotiFicationMapper notiFicationMapper;
-
+    @Autowired
+    private DianzanMapper dianzanMapper;
 
     @Transactional//开启事务--当下面任何一条语句执行失败后都将会回滚到最初始状态
     public void insert(User user, CommentDTO commentDTO) {
@@ -79,7 +80,7 @@ public class CommentService {
         }
     }
 
-    public List<CommentControllerDTO> getList(Long parentId, int i) {
+    public List<CommentControllerDTO> getList(Long parentId, int i, User user1) {
         List<CommentControllerDTO> list=new ArrayList<CommentControllerDTO>();
         CommentExample commentExample=new CommentExample();
         commentExample.createCriteria().andParentIdEqualTo(parentId).andTypeEqualTo(i);
@@ -108,6 +109,17 @@ public class CommentService {
                 user.setName("匿名用户");
                 collect1.put(comment.getCommentator(),user);
             }
+            /*根据用户是否登录来判断用户是否点过赞*/
+             if (user1!=null) {
+                 //想数据库查寻是否有点赞
+                 DianzanExample example = new DianzanExample();//要根据当前用户来判断是否点过赞
+                 example.createCriteria().andOuteridEqualTo(comment.getId().longValue()).andNotifierEqualTo(user1.getId().longValue());
+                 List<Dianzan> dianzans = dianzanMapper.selectByExample(example);
+                 if (dianzans.size() != 0) {
+                     if (StringUtils.equals(dianzans.get(0).getZhaunttai(), DianzanEum.REPLY_QUESTION.getType()))
+                     commentControllerDTO.setDianzan(dianzans.get(0));
+                 }
+             }
             commentControllerDTO.setUser(collect1.get(comment.getCommentator()));
             list1.add(commentControllerDTO);
             return commentControllerDTO;
