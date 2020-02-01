@@ -16,7 +16,7 @@ function adder(e) {
             if (response.code==2003) {
                 var v = confirm(response.message);
                 if (v) {
-                    window.open("https://github.com/login/oauth/authorize?client_id=43eadde0b6dd72f33590&redirect_url=http://localhost:8887//callback&scope=user&state=1");
+                    window.open("/github");
                     window.localStorage.setItem("closable", true);
                 }
             }

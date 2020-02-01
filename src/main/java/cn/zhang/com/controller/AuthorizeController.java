@@ -62,7 +62,7 @@ public class AuthorizeController {
         //解析返回值 System.out.println(githubUser.toString());
         GithubUser githubUser = githubProvider.getUser(accessToken);
         if (githubUser.getName()==null){
-            return "redirect:https://github.com/login/oauth/authorize?client_id=+"+Client_id+"&redirect_url=http://localhost:8887//callback&scope=user&state=1";
+            return "redirect:https://github.com/login/oauth/authorize?client_id="+Client_id+"&redirect_url=http://localhost:8887//callback&scope=user&state=1";
         }
         if (!githubUser.getName().isEmpty()) {
             //登录成功 写cookie和，session
@@ -110,5 +110,13 @@ public class AuthorizeController {
         response.addCookie(cookie);
         request.getSession().setAttribute("user", null);
         return "redirect:/";
+    }
+    /*github登录地址*/
+    @RequestMapping("/github")
+    public String github(HttpServletRequest request,
+                         HttpServletResponse response) {
+        return "redirect:https://github.com/login/oauth/authorize?client_id="+Client_id+"&redirect_url=http://localhost:8887//callback&scope=user&state=1";
+
+
     }
 }
