@@ -1,13 +1,9 @@
 package cn.zhang.com.service;
 
 import cn.zhang.com.enums.DianzanEum;
-import cn.zhang.com.mapper.Comm;
-import cn.zhang.com.mapper.CommentExtMapper;
-import cn.zhang.com.mapper.DianzanMapper;
-import cn.zhang.com.model.Comment;
-import cn.zhang.com.model.Dianzan;
-import cn.zhang.com.model.DianzanExample;
-import cn.zhang.com.model.User;
+import cn.zhang.com.enums.NotificationEnum;
+import cn.zhang.com.mapper.*;
+import cn.zhang.com.model.*;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +21,16 @@ public class DianzanService {
     private Comm comm;
     @Autowired
     private CommentExtMapper commentExtMapper;
+    @Autowired
+    private NotiFicationMapper notiFicationMapper;
+    @Autowired
+    private CommentMapper commentMapper;
     @Transactional
     public Integer DianzanPanDuan(int id, User user) {
         //根据回复问题id去查询这个回复是否被点过赞
         DianzanExample example1 = new DianzanExample();
         example1.createCriteria().andOuteridEqualTo((long) Math.toIntExact(id)).andNotifierEqualTo(user.getId().longValue());
         List<Dianzan> dianzans = dianzanMapper.selectByExample(example1);
-        System.out.println(dianzans.size()+"}");
         //当前用户未被点赞过
         if (dianzans.size() == 0) {
             //创建点赞表然后点赞
@@ -43,10 +42,24 @@ public class DianzanService {
             dianzan.setZhaunttai(DianzanEum.REPLY_QUESTION.getType());
             dianzan.setGmtCreate(System.currentTimeMillis());
             //向数据库添加点赞数据
-            System.out.println(dianzan.toString());
             dianzanMapper.insert(dianzan);
             //增加当前回复的点赞数
             commentExtMapper.addupdate(id);
+            //向被点赞用户提示
+            NotiFication record = new NotiFication();
+            record.setStatus(0);//未读状态
+            record.setGmtCreate(System.currentTimeMillis());
+            record.setNotifier(user.getId().longValue());
+            record.setOuterid(Long.valueOf(id+""));
+            //根据当前问题查询到要被提示的用户
+            Comment comment = commentMapper.selectByPrimaryKey(id);
+            //有一种可能就是，用户注销了 为了防止这种错误的发生，如果查不到当前用户则返回-1
+            if (comment == null) {
+                comment.setCommentator(-1);
+            }
+            record.setReceiver(comment.getCommentator().longValue());
+            record.setType(NotificationEnum.RELY_DIANZAN.getType());
+            notiFicationMapper.insert(record);
             return DianzanEum.REPLY_QUESTION.getType();
         } else {
             Dianzan dianzan = dianzans.get(0);

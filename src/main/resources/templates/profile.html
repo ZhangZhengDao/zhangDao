@@ -80,6 +80,9 @@
                                 <span th:if="${a.getNotiFication().getType()==2}">
                         <span><strong>评论了你的回复:</strong></span>
                     </span>
+                                <span th:if="${a.getNotiFication().getType()==3}">
+                        <span><strong>点赞了你的回复:</strong></span>
+                    </span>
                                 <em><strong class="text-primary" th:text="${a.getQuestion().getTitle()}"></strong></em>
                             </div>
                         </td>
