@@ -20,7 +20,7 @@
             <hr>
             <!--内容行-->
             <!--内容行-->
-            <div class="media" th:each="a : ${list.questionDTOS}" th:if="${modelName.equals('我的提问')}">
+            <div class="media" th:each="a : ${zhang1.questionDTOS}" th:if="${modelName.equals('我的提问')}">
                 <div class="media-left">
                     <a th:href="${'/question/'+a.getQuestion().getId()}">
                         <img style="width: 55px;height: 55px" class="img-rounded" th:src="@{${a.user.getAvatarUrl()}}">
@@ -56,7 +56,7 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li><a th:href="@{/profile/action/(page=${a})}"  th:each="a : ${list.pages}" th:text="${a}"></a></li>
+                    <li><a th:href="@{/profile/action/(page=${a})}"  th:each="a : ${zhang1.pages}" th:text="${a}"></a></li>
                     <li>
                         <a href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -79,9 +79,6 @@
                     </span>
                                 <span th:if="${a.getNotiFication().getType()==2}">
                         <span><strong>评论了你的回复:</strong></span>
-                    </span>
-                                <span th:if="${a.getNotiFication().getType()==3}">
-                        <span><strong>点赞了你的回复:</strong></span>
                     </span>
                                 <em><strong class="text-primary" th:text="${a.getQuestion().getTitle()}"></strong></em>
                             </div>

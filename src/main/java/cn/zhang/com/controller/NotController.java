@@ -22,6 +22,7 @@ public class NotController {
     private DianzanService dianzanService;
     //根据id判断消息是否为已读状态
     @GetMapping("/NotController/{id}")
+
     private String tongzhi(@PathVariable(name = "id") Integer id, HttpServletRequest request){
         /*更改已读未读状态，返回值为问题的id*/
        Integer panid= notFicationService.updateSata(id);

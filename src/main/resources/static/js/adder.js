@@ -1,6 +1,10 @@
 function adder(e) {
     var id = e.getAttribute("data-id");
     var content = $("#erere"+id).val();
+    var quan = $("#erere1"+id).text();
+    if (quan!="@"){
+        content=quan+content;
+    }
     $.ajax({
         type: "post",
         url: "/Commenter",

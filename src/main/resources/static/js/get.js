@@ -36,7 +36,8 @@ function get(e) {
                 });
                 var c1_a=$("<h4/>",{
                     "class": "media-heading",
-                    html:comment[i].user.name
+                    html:comment[i].user.name,
+                    "id":"usernameid"+comment[i].comment.id+""
                 });
                 /*评论，回复，时间*/
                 var c1_a2_a_a=$("<span/>",{
@@ -45,6 +46,7 @@ function get(e) {
                 });
                 var c1_a2_a_a1=$("<span/>",{
                     "class": "glyphicon glyphicon-comment iun",
+                    "onclick":"erji("+"'"+id+","+comment[i].comment.id+"'"+")"
                 });
              /*   var c1_a2_a_a=$("<span/>",{
                     "class": "mun",

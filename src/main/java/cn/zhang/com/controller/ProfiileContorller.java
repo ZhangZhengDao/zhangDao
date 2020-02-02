@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,19 +32,19 @@ public class ProfiileContorller {
             return "/";
         }
         /*向数据库查询关于当前用户所有提问的信息*/
-        if ("action".equals("action")) {
+        if (StringUtils.equals("action",action)) {
             model.addAttribute("model", "action");
-            PaginationDTO select = querstionService.select(user.getAccount(), page, size, null);
-            model.addAttribute("list", select);
+            model.addAttribute("zhang1", querstionService.select(user.getAccount(), page, size,  "false", "false","false"));
             model.addAttribute("modelName", "我的提问");
         }
         /*查询当前用户的未读回复*/
-        if ("zuixinhuifu".equals(action)) {
+        if (StringUtils.equals("zuixinhuifu",action)) {
             /*根据用户ia向数据库查询出所有未读信息*/
             /*分页*/
             model.addAttribute("zhang",notFicationService.getWeidu(user,page,size));
             model.addAttribute("model", "zuixinhuifu");
             model.addAttribute("modelName", "最新回复");
+            model.addAttribute("zhang1", new PaginationDTO());
         }
         return "profile";
     }

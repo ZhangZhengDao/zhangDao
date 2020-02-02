@@ -12,5 +12,8 @@ public interface QuestionExtMapper {
     int comm(Integer id);
     List<Question> selectlike(Question question);
     List<Question> getLike(Question example, RowBounds rowBounds);
+    List<Question> getLikeREmen(Question example, RowBounds rowBounds);
+    List<Question> getLikeReMenChaXun(Question example, RowBounds rowBounds);
     Long getzongshu(Question example);
+    Long getzongshuRUMEN(Question example);
 }

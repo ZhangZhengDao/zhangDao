@@ -8,13 +8,15 @@
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/suosuo.js"></script>
+    <script src="/js/renMenBiaoQian.js"></script>
     <script type="application/javascript">
         var closable = window.localStorage.getItem("closable");
-        if (closable=="true"){
+        if (closable == "true") {
             window.close();
-            window.localStorage.setItem("closable",false);
+            window.localStorage.setItem("closable", false);
         }
     </script>
+
 </head>
 <body style="background-color:gainsboro">
 <div th:include="index::copyright"></div>
@@ -36,8 +38,8 @@
                     <span style="font-size: 12px;font-weight: normal;color: #999"
                           th:text="${a.getQuestion().getTag()}"></span>
                     <br>
-                   <!-- <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${a.getQuestion().getDescription()}"></span>-->
+                    <!-- <span style="font-size: 12px;font-weight: normal;color: #999"
+                           th:text="${a.getQuestion().getDescription()}"></span>-->
                     <span style="font-size: 12px;font-weight: normal;color: #999"
                           th:text="${a.getQuestion().getCommentCount()}"
                           th:if="${a.getQuestion().getCommentCount()!=null}"></span>
@@ -76,7 +78,8 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li><a th:href="@{/(page=${a},sousuo=${s})}" href="#" th:each="a : ${list.pages}" th:text="${a}"></a></li>
+                    <li><a th:href="@{/(page=${a},sousuo=${s})}" href="#" th:each="a : ${list.pages}"
+                           th:text="${a}"></a></li>
                     <li>
                         <a href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -85,12 +88,29 @@
                 </ul>
             </nav>
         </div>
-        <h3 class="col-lg-3 col-md-12 col-sm-12 col-xs-12" style="margin: 50px 50px 50px 50px ">
-            <h3>问题发起指南</h3>
-            • 问题标题: 请用精简的语言描述您发布的问题，不超过25字
-            • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料
-            • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字
-        </h3>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h3>问题发起指南</h3>
+                <h5>• 问题标题: 请用精简的语言描述您发布的问题，不超过25字</h5>
+                <h5>• 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料</h5>
+                <h5>• 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字</h5>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h3>热门标签</h3>
+                <table class="table table-hover">
+                    <tr th:each="a:${renmen}" style="cursor: pointer;">
+                        <td class="info " th:data-id="${a.getIs()}" onclick="renMenBiaoQian(this)">
+                            <span style="margin-left: 8px" class="glyphicon glyphicon glyphicon-option-vertical">
+                                热度标签<span style="margin-left: 5px"  th:text="${a.getIs()}"></span>
+                                <span class="glyphicon glyphicon-hand-up" style="margin-left: 10px"
+                                      th:text="'标签热度'+${a.getZh()}"></span>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
     </div>
 </div>
 </body>

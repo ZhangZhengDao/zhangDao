@@ -1,0 +1,17 @@
+#\uFFFD\uFFFD\uFFFDthymeleaf\uFFFD\uFFFD\uFFFD\uFFFD
+spring.thymeleaf.cache=false
+#\uFFFD\uFFFD\uFFFD\u0136\u02FF\u06BA\uFFFD
+server.port=8148
+#\uFFFD\uFFFD\uFFFD\uFFFDgit\uFFFD\uFFFD\uFFFD\uFFFD\u04AA\uFFFD\u0139\u0336\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD
+github.Client_id=43eadde0b6dd72f33590
+github.Client_secret=ad8fef78abf6c645a4d529608d45fecb06e786cc
+github.Redirect_url=http://localhost:8887//callback
+#\uFFFD\uFFFD\uFFFD\u077F\uFFFD\uFFFD\uFFFD\uFFFD\u04F3\uFFFD\uFFFD\uFFFD\uFFFD\uFFFD
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.datasource.url=jdbc:mysql://106.75.80.178:3306/Test?useSSL=false
+spring.datasource.username=root
+spring.datasource.password=Passwd123!
+mybatis.type-aliases-package=cn.zhang.com.mapper
+mybatis.mapper-locations=classpath:mapper/*.xml
+
+#http://localhost:8887//callback

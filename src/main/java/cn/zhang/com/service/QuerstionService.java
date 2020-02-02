@@ -31,7 +31,7 @@ public class QuerstionService {
     @Autowired(required = false)
     private QuestionExtMapper questionExtMapper;
 
-    public PaginationDTO select(String account, Integer page, Integer size, String sousuo) {
+    public PaginationDTO select(String account, Integer page, Integer size,  String sousuo, String redu,String remen) {
         //定义格式
         Integer c = size * (page - 1);
         UserExample userExample = new UserExample();
@@ -45,35 +45,52 @@ public class QuerstionService {
         List<Question> select1 = new ArrayList<>();
         select1 = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(c, size));
         Long getzongshu = null;
-        if (!StringUtils.equals(sousuo, "false") && !StringUtils.isEmpty(sousuo)) {
-            String[] sql = sousuo.split(" ");
-            //用正则表达之匹配需要转以
-            for (int i = 0; i < sql.length; i++) {
-                /** . ? + $ ^ [ ] ( ) { } | \ /*/
-                if (StringUtils.equals(sql[i],"*")||
-                        StringUtils.equals(sql[i],"*")||
-                        StringUtils.equals(sql[i],".")||
-                        StringUtils.equals(sql[i],"?")||
-                        StringUtils.equals(sql[i],"$")||
-                        StringUtils.equals(sql[i],"+")||
-                        StringUtils.equals(sql[i],"^")||
-                        StringUtils.equals(sql[i],"[")||
-                        StringUtils.equals(sql[i],"]")||
-                        StringUtils.equals(sql[i],"(")||
-                        StringUtils.equals(sql[i],")")||
-                        StringUtils.equals(sql[i],"{")||
-                        StringUtils.equals(sql[i],"}")||
-                        StringUtils.equals(sql[i],"|")||
-                        StringUtils.equals(sql[i],"\\")||
-                        StringUtils.equals(sql[i],"/")){
-                    sql[i]="\\"+sql[i];
+        if (!sousuo.isEmpty()) {
+            if (!StringUtils.equals(sousuo, "false")) {
+                String[] sql = sousuo.split(" ");
+                //用正则表达之匹配需要转以
+                for (int i = 0; i < sql.length; i++) {
+                    /** . ? + $ ^ [ ] ( ) { } | \ /*/
+                    if (StringUtils.equals(sql[i], "*") ||
+                            StringUtils.equals(sql[i], "*") ||
+                            StringUtils.equals(sql[i], ".") ||
+                            StringUtils.equals(sql[i], "?") ||
+                            StringUtils.equals(sql[i], "$") ||
+                            StringUtils.equals(sql[i], "+") ||
+                            StringUtils.equals(sql[i], "^") ||
+                            StringUtils.equals(sql[i], "[") ||
+                            StringUtils.equals(sql[i], "]") ||
+                            StringUtils.equals(sql[i], "(") ||
+                            StringUtils.equals(sql[i], ")") ||
+                            StringUtils.equals(sql[i], "{") ||
+                            StringUtils.equals(sql[i], "}") ||
+                            StringUtils.equals(sql[i], "|") ||
+                            StringUtils.equals(sql[i], "\\") ||
+                            StringUtils.equals(sql[i], "/")) {
+                        sql[i] = "\\" + sql[i];
+                    }
+                }
+                String collect = Arrays.stream(sql).collect(Collectors.joining("|"));
+                Question question = new Question();
+                question.setTitle(collect);
+                getzongshu = questionExtMapper.getzongshu(question);
+                select1 = questionExtMapper.getLike(question, new RowBounds(c, size));
+                if (!StringUtils.equals(remen,"false")){
+                    question.setTag(remen);
+                    select1 = questionExtMapper.getLikeReMenChaXun(question, new RowBounds(c, size));
                 }
             }
-            String collect = Arrays.stream(sql).collect(Collectors.joining("|"));
-            Question question = new Question();
-            question.setTitle(collect);
-            getzongshu = questionExtMapper.getzongshu(question);
-            select1 = questionExtMapper.getLike(question,new RowBounds(c,size));
+        }
+        /*热门标签查找*/
+        if (!redu.isEmpty()) {
+            if (!StringUtils.equals(redu, "false")) {
+                Question question = new Question();
+                question.setTag(redu);
+                //重置个数
+                getzongshu = questionExtMapper.getzongshuRUMEN(question);
+                //重置列表内容
+                select1 = questionExtMapper.getLikeREmen(question, new RowBounds(c, size));
+            }
         }
         List<QuestionDTO> questionDTOS = new ArrayList<QuestionDTO>();
         PaginationDTO paginationDTO = new PaginationDTO();
@@ -169,5 +186,10 @@ public class QuerstionService {
         question.setTag(collect);
         List<Question> selectlike = questionExtMapper.selectlike(question);
         return selectlike;
+    }
+
+    public PaginationDTO getReMenWenti(String redu, Integer page, Integer size) {
+
+        return null;
     }
 }
