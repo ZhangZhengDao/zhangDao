@@ -26,7 +26,7 @@ public class ProfiileContorller {
                           @PathVariable(name = "action") String action,
                           HttpServletRequest request,
                           @RequestParam(name = "page", defaultValue = "1") Integer page,
-                          @RequestParam(name = "size", defaultValue = "5") Integer size) {
+                          @RequestParam(name = "size", defaultValue = "10") Integer size) {
         User user = (User) request.getSession().getAttribute("user");
         if (user==null){
             return "/";

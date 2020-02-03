@@ -128,16 +128,17 @@ public class CommentService {
     }
     //向数据库添加二级评论信息
     @Transactional
-    public void addCommenter(CommenterDTO commenterDTO,User user) {
+    public Comment addCommenter(CommenterDTO commenterDTO,User user) {
         //使一级评论回复数加一
         commentExtMapper.upda(Math.toIntExact(commenterDTO.getId()));
         //向数据酷添加二级评论内容
+        long gmtCreate = System.currentTimeMillis();
         Comment comment = new Comment();
         comment.setParentId(commenterDTO.getId());
         comment.setContent(commenterDTO.getContent());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
-        comment.setGmtCreate(System.currentTimeMillis());
+        comment.setGmtCreate(gmtCreate);
         comment.setGmtModified(comment.getGmtCreate());
         comment.setType(2);
         comment.setCommentCount(0);
@@ -153,5 +154,9 @@ public class CommentService {
         record1.setNotifier(comment.getCommentator().longValue());
         record1.setStatus(0);
         notiFicationMapper.insert(record1);
+        //根据时间返回二级评论的所有信息
+        CommentExample example = new CommentExample();
+        example.createCriteria().andGmtCreateEqualTo(gmtCreate);
+        return commentMapper.selectByExample(example).get(0);
     }
 }

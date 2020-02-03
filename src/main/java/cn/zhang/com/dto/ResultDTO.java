@@ -35,7 +35,7 @@ public class  ResultDTO<T> {
         return ResultDTO(e.getCode(), e.getMessage());
     }
 
-    public ResultDTO okofer(List<CommentControllerDTO> comment) {
+    public ResultDTO okofer(List<T> comment) {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setCode(200);
         resultDTO.setMessage("回复成功");

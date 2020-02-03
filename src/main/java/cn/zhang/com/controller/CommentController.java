@@ -5,6 +5,7 @@ import cn.zhang.com.dto.CommentDTO;
 import cn.zhang.com.dto.CommenterDTO;
 import cn.zhang.com.dto.ResultDTO;
 import cn.zhang.com.exception.CustomizeErrorCode;
+import cn.zhang.com.model.Comment;
 import cn.zhang.com.model.User;
 import cn.zhang.com.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /*评论*/
@@ -58,7 +60,10 @@ public class CommentController {
         if (user == null) {
             return ResultDTO.denglu(CustomizeErrorCode.NO_LOGIN);
         }
-        commentService.addCommenter(commenterDTO,user);
-        return new ResultDTO().okof();
+        Comment comment = commentService.addCommenter(commenterDTO, user);
+        List<CommenterDTO> list=new ArrayList<>();
+        commenterDTO.setUser(user);
+        list.add(commenterDTO);
+        return new ResultDTO().okofer(list);
     }
 }

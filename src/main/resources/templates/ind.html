@@ -55,7 +55,7 @@
                     <hr>
                 </div>
             </div>
-            <nav aria-label="Page navigation" th:if="${s==null}">
+            <nav aria-label="Page navigation" th:if="${s==null&&r==null}">
                 <ul class="pagination">
                     <li>
                         <a href="#" aria-label="Previous">
@@ -79,6 +79,23 @@
                         </a>
                     </li>
                     <li><a th:href="@{/(page=${a},sousuo=${s})}" href="#" th:each="a : ${list.pages}"
+                           th:text="${a}"></a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!--热门标签-->
+            <nav aria-label="Page navigation" th:if="${r!=null}">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a th:href="@{/(page=${a},redu=${r})}" href="#" th:each="a : ${list.pages}"
                            th:text="${a}"></a></li>
                     <li>
                         <a href="#" aria-label="Next">

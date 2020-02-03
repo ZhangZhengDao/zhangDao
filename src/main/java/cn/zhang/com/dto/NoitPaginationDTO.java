@@ -16,12 +16,12 @@ public class NoitPaginationDTO {
     public void getfenyeshu(Integer integer){
         //拿到给出的总数后取余
         List<Integer> y=new ArrayList<>();
-        if (integer%5==0){
-            for (int i = 1; i <= integer / 5; i++) {
+        if (integer%10==0){
+            for (int i = 1; i <= integer / 10; i++) {
                 y.add(i);
             }
         }else{
-            for (int i = 1;i <= integer / 5 + 1; i++) {
+            for (int i = 1;i <= integer / 10 + 1; i++) {
                 y.add(i);
             }
         }

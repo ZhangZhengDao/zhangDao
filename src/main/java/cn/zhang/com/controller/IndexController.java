@@ -46,10 +46,17 @@ public class IndexController {
         //将得到的列表排序
         model.addAttribute("list", select);
         /*如何时模糊查询返回值也需要标记*/
-        if (!StringUtils.equals(sousuo, "false") && !StringUtils.isEmpty(sousuo)) {
+        if (!StringUtils.equals(sousuo, "false")) {
             model.addAttribute("s",sousuo);
         }
-        request.getSession().setAttribute("remen","false");
+        /*热门标签分页标记*/
+        if (!StringUtils.equals(redu, "false")) {
+            model.addAttribute("r",redu);
+        }
+        //如果停止搜索了就代表回到了主页面
+        if(StringUtils.equals(sousuo,"false")) {
+            request.getSession().setAttribute("remen", "false");
+        }
         /*点击热度后需要给返回值*/
         if (!StringUtils.equals(redu,"false")){
             request.getSession().setAttribute("remen",redu);

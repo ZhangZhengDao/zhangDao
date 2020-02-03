@@ -45,8 +45,10 @@ function get(e) {
                     style:"margin-right: 10px;"
                 });
                 var c1_a2_a_a1=$("<span/>",{
-                    "class": "glyphicon glyphicon-comment iun",
-                    "onclick":"erji("+"'"+id+","+comment[i].comment.id+"'"+")"
+                    "class": " iun",
+                    "onclick":"erji("+"'"+id+","+comment[i].comment.id+"'"+")",
+                    text:"回复",
+                    style:"font-size:15px;margin-left: -5px;float: right;"
                 });
              /*   var c1_a2_a_a=$("<span/>",{
                     "class": "mun",

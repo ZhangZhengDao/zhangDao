@@ -62,9 +62,7 @@ public class NotFicationService {
                 //拿到了真正的问题id
                 a.setOuterid(comment.getParentId());
             }
-            System.out.println(a.getOuterid());
             notFicationAndUserDTO.setQuestion(questionMapper.selectByPrimaryKey(Math.toIntExact(a.getOuterid())));
-            System.out.println(a.getOuterid()+"}");
             notFicationAndUserDTO.setNotiFication(a);
             list1.add(notFicationAndUserDTO);
 //            }
@@ -88,7 +86,6 @@ public class NotFicationService {
             example.createCriteria().andReceiverEqualTo(users.get(0).getId().longValue()).andStatusEqualTo(0);//零为未读状态
             return notiFicationMapper.selectByExample(example).size();
         }
-        System.out.println("azhang");
         return 0;
     }
 
