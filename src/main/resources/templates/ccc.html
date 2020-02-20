@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <!--    <script src="/zhang.js"></script>
+        <script src="../static/zhang.js"></script>
+        <script src="../static/jquery-3.4.1.min.js"></script>-->
+</head>
+<body>
+<button onclick="send()">点击</button>
+<span id="zhang">你好</span><br>
+请输入你的账号<input type="text" id="name"><br>
+请输入收到消息的人编号<input type="text" id="UserName"><br>
+消息内容<input type="text" id="NeiRong"><br>
+<span id="text1">快来发消息吧</span><br>
+</body>
+</html>
+<script type="text/javascript">
+    //消息内容
+    var text1=$("#text1").val();
+    //发消息的人的id
+    var name=$("#name").val();
+    var  webSocket=null;
+    //判断当前浏览器是否支持WebSocket
+    if ('WebSocket' in window){
+        webSocket=new WebSocket('ws://localhost:8887/webSocket/'+1);
+    } else{
+        alert("当前浏览器不支持WebSocket");
+    }
+    //连接发生错误的回调方法
+    webSocket.onerror=function () {
+        $("#text1").text("WebSocket连接发生错误！");
+    }
+    webSocket.onopen=function () {
+        $("#text1").text("WebSocket连接成功！")
+    }
+    //获取服务器要向客户端发送的内容
+    webSocket.onmessage=function (event) {
+        alert(event.data)
+    }
+    webSocket.onclose=function () {
+        $("#text1").text("WebSocket连接关闭");
+    }
+    function send() {
+        var data={"name":"张三","text":"c"}
+        alert(JSON.stringify(data))
+        webSocket.send(JSON.stringify(data));
+    }
+</script>

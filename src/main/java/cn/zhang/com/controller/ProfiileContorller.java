@@ -34,9 +34,10 @@ public class ProfiileContorller {
         /*向数据库查询关于当前用户所有提问的信息*/
         if (StringUtils.equals("action",action)) {
             model.addAttribute("model", "action");
-            model.addAttribute("zhang1", querstionService.select(user.getAccount(), page, size,  "false", "false","false"));
+            model.addAttribute("zhang1", querstionService.gitUserWenti(user,page,size));
             model.addAttribute("modelName", "我的提问");
         }
+        model.addAttribute("zhang1", querstionService.gitUserWenti(user,page,size));
         /*查询当前用户的未读回复*/
         if (StringUtils.equals("zuixinhuifu",action)) {
             /*根据用户ia向数据库查询出所有未读信息*/
@@ -44,7 +45,7 @@ public class ProfiileContorller {
             model.addAttribute("zhang",notFicationService.getWeidu(user,page,size));
             model.addAttribute("model", "zuixinhuifu");
             model.addAttribute("modelName", "最新回复");
-            model.addAttribute("zhang1", new PaginationDTO());
+            model.addAttribute("zhang1", querstionService.gitUserWenti(user,page,size));
         }
         return "profile";
     }

@@ -41,4 +41,16 @@ public class UserService {
         return userMapper.selectByExample(userExample).get(0);
 
     }
+
+    /*判断普通用户用户名和密码是否正确*/
+    public User Denglu(User user) {
+        UserExample example = new UserExample();
+        example.createCriteria().andNameEqualTo(user.getName())
+                .andPasswdEqualTo(user.getPasswd());
+        List<User> users = userMapper.selectByExample(example);
+        if (users.size() == 0) {
+            return null;
+        }
+        return users.get(0);
+    }
 }

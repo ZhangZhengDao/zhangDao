@@ -3,6 +3,11 @@ package cn.zhang.com.controller;
 import cn.zhang.com.advice.TagCache;
 import cn.zhang.com.dto.CommentControllerDTO;
 import cn.zhang.com.dto.QuestionDTO;
+import cn.zhang.com.dto.TagDTO;
+import cn.zhang.com.enums.CommentTypeEnum;
+import cn.zhang.com.exception.CustomizeErrorCode;
+import cn.zhang.com.exception.CustomizeException;
+import cn.zhang.com.exception.ICustomizeErrorCode;
 import cn.zhang.com.model.Comment;
 import cn.zhang.com.model.Question;
 import cn.zhang.com.model.User;
@@ -25,11 +30,22 @@ public class QuestionController {
     private CommentService commentService;
 
     @GetMapping("/question/{id}")
-    public String question(@PathVariable(name = "id") Integer id,
+    public String question(@PathVariable(name = "id") String Sid,
                            Model model,
                            HttpServletRequest request) {
+        //先判断地址栏内容是否符合要求
+        Integer id=0;
+        try {
+            id=Integer.valueOf(Sid);
+        }catch (Exception e){
+            throw new CustomizeException(CustomizeErrorCode.INVALID_INPUT);
+        }
         //拿到当前问题的id的内容
         QuestionDTO questionDTO = querstionService.getquestionDTO(id);
+        //如果为空的就表示没有当前问题抛出异常
+        if (questionDTO==null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         long L=id;
         /*当前用户是否点赞需要用户信息，判断用户是否登录*/
         User user= (User) request.getSession().getAttribute("user");

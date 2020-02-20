@@ -16,7 +16,11 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     NOTIFICATION_NOT_FOUND(2009, "消息莫非是不翼而飞了？"),
     FILE_UPLOAD_FAIL(2010, "图片上传失败"),
     INVALID_INPUT(2011, "非法输入"),
-    INVALID_OPERATION(2012, "兄弟，是不是走错房间了？"),
+    INVALID_OPERATION(2013, "您要找的用户不存在了"),
+    INVALID_DENGLU(2014, "登录失败用户名或密码错误"),
+    INVALID_DENGLUCENGGOGN(2000, "登录成功"),
+    INVALID_Friend(2015, "你并不是对方好友,不能使用发消息功能"),
+    INVALID_FriendQITA(2016, "你收到新的信息")
     ;
 
     @Override

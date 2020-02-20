@@ -86,9 +86,7 @@ public class PublishController {
             question.setGmtModified(question.getGmtCreate());
             //给发起提问添加状态 如果有当前提问就只用修改，没有就去数据酷添加
             querstionService.AddQuestionORUpdate(question, user1);
-            PaginationDTO select = querstionService.select(null, page, size,  "false", "false","false");
-            model.addAttribute("list", select);
-            return "ind";
+            return "redirect:/";
         }
 
     }

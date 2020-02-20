@@ -5,10 +5,11 @@
     <title>发布问题</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.css">
-    <script src="js/jquery-3.4.1.min.js"></script>
-    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/suosuo.js"></script>
     <script src="/js/renMenBiaoQian.js"></script>
+    <script src="/js/index.js"></script>
     <script type="application/javascript">
         var closable = window.localStorage.getItem("closable");
         if (closable == "true") {
@@ -16,119 +17,133 @@
             window.localStorage.setItem("closable", false);
         }
     </script>
-
+    <script src="/js/sidebar.js"></script>
+    <link rel="stylesheet" href="/css/sidebar.css">
 </head>
-<body style="background-color:gainsboro">
+<body style="background-color:lightblue">
 <div th:include="index::copyright"></div>
-<div class="container-fluid" style="margin: 0px 50px 50px 50px ;background-color: white">
-    <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            <h2><span class="glyphicon glyphicon glyphicon-baby-formula" aria-hidden="true"></span> 发现</h2>
-            <hr>
-            <!--内容行-->
-            <div class="media" th:each="a : ${list.questionDTOS}">
-                <div class="media-left">
-                    <a th:href="${'/question/'+a.getQuestion().getId()}"><!-- th:src="@{${a.user.getAvatar_url()}}-->
-                        <img style="width: 55px;height: 55px" class="img-rounded"
-                             th:src="${(a.user.getAvatarUrl() != null && !#strings.isEmpty(a.user.getAvatarUrl())) ? a.user.getAvatarUrl() : '/timg.png'}">
-                    </a>
-                </div>
-                <div class="media-body">
-                    <h4 class="media-heading" th:text="${a.getQuestion().getTitle()}">用户名</h4>
-                    <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${a.getQuestion().getTag()}"></span>
-                    <br>
-                    <!-- <span style="font-size: 12px;font-weight: normal;color: #999"
-                           th:text="${a.getQuestion().getDescription()}"></span>-->
-                    <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${a.getQuestion().getCommentCount()}"
-                          th:if="${a.getQuestion().getCommentCount()!=null}"></span>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0"
-                          th:if="${a.getQuestion().getCommentCount()==null}"></span>个回复 .
-                    <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${a.getQuestion().getViewCount()}"
-                          th:if="${a.getQuestion().getViewCount()!=null}"></span>
-                    <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0"
-                          th:if="${a.getQuestion().getViewCount()==null}"></span>次浏览 .
-                    <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${#dates.format(a.getQuestion().getGmtModified(),'mm:HH dd MMM yyyy')}"></span>
-                    <hr>
-                </div>
-            </div>
-            <nav aria-label="Page navigation" th:if="${s==null&&r==null}">
-                <ul class="pagination">
-                    <li>
-                        <a href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li><a th:href="@{/(page=${a})}" href="#" th:each="a : ${list.pages}" th:text="${a}"></a></li>
-                    <li>
-                        <a href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <!--查询页-->
-            <nav aria-label="Page navigation" th:if="${s!=null}">
-                <ul class="pagination">
-                    <li>
-                        <a href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li><a th:href="@{/(page=${a},sousuo=${s})}" href="#" th:each="a : ${list.pages}"
-                           th:text="${a}"></a></li>
-                    <li>
-                        <a href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <!--热门标签-->
-            <nav aria-label="Page navigation" th:if="${r!=null}">
-                <ul class="pagination">
-                    <li>
-                        <a href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li><a th:href="@{/(page=${a},redu=${r})}" href="#" th:each="a : ${list.pages}"
-                           th:text="${a}"></a></li>
-                    <li>
-                        <a href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+<div id="wrapper" style="left:0;margin-top: 100px">
+    <div class="sidebar">
+        <div class="headSculpture">
+            <img src="images/headSculpture.jpg" alt="">
+            <p>昵称：粉红色少女</p>
         </div>
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h3>问题发起指南</h3>
-                <h5>• 问题标题: 请用精简的语言描述您发布的问题，不超过25字</h5>
-                <h5>• 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料</h5>
-                <h5>• 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字</h5>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h3>热门标签</h3>
-                <table class="table table-hover">
-                    <tr th:each="a:${renmen}" style="cursor: pointer;">
-                        <td class="info " th:data-id="${a.getIs()}" onclick="renMenBiaoQian(this)">
-                            <span style="margin-left: 8px" class="glyphicon glyphicon glyphicon-option-vertical">
-                                热度标签<span style="margin-left: 5px"  th:text="${a.getIs()}"></span>
-                                <span class="glyphicon glyphicon-hand-up" style="margin-left: 10px"
-                                      th:text="'标签热度'+${a.getZh()}"></span>
-                            </span>
-                        </td>
-                    </tr>
-                </table>
-            </div>
+        <div class="option">
+            <ul>
+                <li><img src="images/home.png" alt="">
+                    <p>首页</p>
+                </li>
+                <li><img src="images/works.png" alt="">
+                    <p>我的作品</p>
+                </li>
+                <li><img src="images/release.png" alt="">
+                    <p>发布作品</p>
+                </li>
+                <li><img src="images/collection.png" alt="">
+                    <p>我的收藏</p>
+                </li>
+                <li><img src="images/setup.png" alt="">
+                    <p>设置</p>
+                </li>
+            </ul>
         </div>
-
     </div>
+    <!-- 侧边栏按钮 -->
+    <button></button>
+    <!-- 内容区域 -->
+    <div class="container-fluid" style="margin: -30px 50px 50px 50px ;background-color: white">
+        <div class="row">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+                <h2><span class="glyphicon glyphicon glyphicon-baby-formula" aria-hidden="true"></span> 发现</h2>
+                <hr>
+                <!--内容行-->
+                <div class="media" th:each="a : ${questionDTO.questionDTOS}">
+                    <div class="media-left">
+                        <a th:href="${'/question/'+a.getQuestion().getId()}">
+                            <!-- th:src="@{${a.user.getAvatar_url()}}-->
+                            <img style="width: 55px;height: 55px" class="img-rounded"
+                                 th:src="${(a.user.getAvatarUrl() != null && !#strings.isEmpty(a.user.getAvatarUrl())) ? a.user.getAvatarUrl() : '/timg.png'}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" th:text="${a.getQuestion().getTitle()}">用户名</h4>
+                        <span style="font-size: 12px;font-weight: normal;color: #999"
+                              th:text="${a.getQuestion().getTag()}"></span>
+                        <br>
+                        <span style="font-size: 12px;font-weight: normal;color: #999"
+                              th:text="${a.getQuestion().getCommentCount()}"
+                              th:if="${a.getQuestion().getCommentCount()!=null}"></span>
+                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0"
+                              th:if="${a.getQuestion().getCommentCount()==null}"></span>个回复 .
+                        <span style="font-size: 12px;font-weight: normal;color: #999"
+                              th:text="${a.getQuestion().getViewCount()}"
+                              th:if="${a.getQuestion().getViewCount()!=null}"></span>
+                        <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0"
+                              th:if="${a.getQuestion().getViewCount()==null}"></span>次浏览 .
+                        <span style="font-size: 12px;font-weight: normal;color: #999"
+                              th:text="${#dates.format(a.getQuestion().getGmtModified(),'mm:HH dd MMM yyyy')}"></span>
+                        <hr>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li>
+                            <a href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <!--主页分页-->
+                        <li th:if="${search==null&&hot==null}"><a th:href="@{/(page=${a})}" href="#"
+                                                       th:each="a : ${questionDTO.getYigong()}"
+                                                       th:text="${a}"></a>
+                        </li>
+                        <!--搜索内容分页-->
+                        <li th:if="${search!=null}"><a th:href="@{/(page=${a},search=${search})}" href="#"
+                                                       th:each="a : ${questionDTO.getYigong()}"
+                                                       th:text="${a}"></a>
+                        </li>
+                        <!--点击标签-->
+                        <li th:if="${hot!=null}"><a th:href="@{/(page=${a},hot=${hot})}" href="#"
+                                                       th:each="a : ${questionDTO.getYigong()}"
+                                                       th:text="${a}"></a>
+                        </li>
+                        <li>
+                            <a href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <h3 style="margin-left: 17px;">问题发起指南</h3>
+                    <h5>• 问题标题: 请用精简的语言描述您发布的问题，不超过25字</h5>
+                    <h5>• 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料</h5>
+                    <h5>• 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字</h5>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <h3 style="margin-left: 17px;">热门标签</h3>
+                    <table class="table table-hover">
+                        <tr th:each="a:${Hotlabel}" style="cursor: pointer;">
+                            <td th:data-id="${a.getIs()}" onclick="renMenBiaoQian(this)">
+                                    <span style="margin-left: 8px"
+                                          class="glyphicon glyphicon glyphicon-option-vertical">
+                                        <span style="margin-left: -15px"><span class="label label-info"><span
+                                                class=" glyphicon glyphicon-tags"
+                                                style="margin-right: 5px;"></span><span
+                                                th:text="${a.getIs()}"></span></span></span>
+                                        <span class="glyphicon glyphicon-hand-up "></span>
+                                         <span style="margin-left: -10px" th:text="'标签热度'+${a.getZh()}"></span>
+                                    </span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </div>
 </body>
 </html>

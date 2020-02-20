@@ -2,15 +2,24 @@ package cn.zhang.com.service;
 
 import cn.zhang.com.dto.NoitPaginationDTO;
 import cn.zhang.com.dto.NotFicationAndUserDTO;
+import cn.zhang.com.dto.RedisD;
+import cn.zhang.com.enums.AdministratorSendEnum;
 import cn.zhang.com.enums.NotificationEnum;
 import cn.zhang.com.mapper.*;
 import cn.zhang.com.model.*;
+import cn.zhang.com.util.Imp.UserutilImp;
+import cn.zhang.com.util.NoitPaginatonUtil;
+import cn.zhang.com.util.UserUtil;
+import cn.zhang.com.util.WebSoketUtil;
+import cn.zhang.com.util.friendUtil;
 import org.apache.ibatis.session.RowBounds;
+import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +36,14 @@ public class NotFicationService {
     private CommentMapper commentMapper;
     @Autowired
     private CommentExtMapper commentExtMapper;
+    @Autowired
+    private UserUtil userUtil;
+    @Autowired
+    private friendUtil friendUtil;
+    @Autowired
+    private WebSoketUtil webSoketUtil;
+    @Autowired
+    private NoitPaginatonUtil noitPaginatonUtil;
 
     /*根据当前用用户信息拿到所有用户未读信息*/
     public NoitPaginationDTO getWeidu(User user, Integer page, Integer size) {
@@ -35,7 +52,6 @@ public class NotFicationService {
         example.createCriteria().andReceiverEqualTo(user.getId().longValue()).andStatusEqualTo(0);//零为未读状态
         Integer c = size * (page - 1);
         RowBounds rowBounds = new RowBounds(c, size);
-        System.out.println("{{{{");
         List<NotiFication> list = notiFicationMapper.selectByExampleWithRowbounds(example, rowBounds);
         List<NotFicationAndUserDTO> list1 = new ArrayList<>();
         list.stream().forEach(a -> {
@@ -62,7 +78,9 @@ public class NotFicationService {
                 //拿到了真正的问题id
                 a.setOuterid(comment.getParentId());
             }
-            notFicationAndUserDTO.setQuestion(questionMapper.selectByPrimaryKey(Math.toIntExact(a.getOuterid())));
+            if (!StringUtils.equals(a.getType(), NotificationEnum.RELY_FRIEND.getType())) {
+                notFicationAndUserDTO.setQuestion(questionMapper.selectByPrimaryKey(Math.toIntExact(a.getOuterid())));
+            }
             notFicationAndUserDTO.setNotiFication(a);
             list1.add(notFicationAndUserDTO);
 //            }
@@ -118,5 +136,54 @@ public class NotFicationService {
             return Math.toIntExact(comment.getParentId());
         }
         return null;
+    }
+
+    public int updatafriendStat(Integer id, HttpServletRequest request) {
+        //检测是否已经关注过
+        NotiFication notiFication = notiFicationMapper.selectByPrimaryKey(id);
+        NotiFicationExample example = new NotiFicationExample();
+        example.createCriteria().andIdEqualTo(id);
+        NotiFication record = notiFication;
+        record.setStatus(1);
+        notiFicationMapper.updateByExample(record, example);
+        return Math.toIntExact(notiFication.getNotifier());
+    }
+
+    @Transactional
+    public void NotFriend(String Notid, HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        NotiFication notiFication = notiFicationMapper.selectByPrimaryKey(Integer.valueOf(Notid));
+        if (notiFication == null) {
+            return;
+        }
+        //判断两个用户是否已经是好友
+        boolean friendboolean = friendUtil.friendboolean(user.getId(), notiFication.getNotifier().intValue());
+        if (friendboolean) {
+            //将消息标未已读
+            noitPaginatonUtil.Read(Integer.valueOf(Notid));
+            return;
+        }
+        //添加好友
+        friendUtil.addfriend(user.getId(), notiFication.getNotifier().intValue());
+        //更新session信息
+        user = userUtil.IDfidUser(user.getId().toString());
+        request.getSession().setAttribute("user", user);
+        //向互相关注的用户发送通知
+        webSoketUtil.senmessageUser(user.getId(),Math.toIntExact(notiFication.getNotifier()), AdministratorSendEnum.AdministratorSend.getContent());
+        webSoketUtil.senmessageUser(Math.toIntExact(notiFication.getNotifier()),user.getId(), AdministratorSendEnum.AdministratorSend.getContent());
+
+    }
+
+    public void friendNoit(String string, HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        //向所给用户id发送一个通知
+        NotiFication record = new NotiFication();
+        record.setStatus(0);
+        record.setOuterid(System.currentTimeMillis());
+        record.setNotifier(user.getId().longValue());
+        record.setGmtCreate(record.getOuterid());
+        record.setType(NotificationEnum.RELY_FRIEND.getType());
+        record.setReceiver(Long.valueOf(string));
+        notiFicationMapper.insert(record);
     }
 }

@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="/css/bootstrap-theme.css">
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/index.js"></script>
 </head>
-
 <body>
 <div th:fragment="copyright">
     <nav class="navbar navbar-default">
@@ -27,22 +27,81 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <form class="navbar-form navbar-left" action="/" method="get">
                     <div class="form-group">
-                        <input type="text" class="form-control" name="sousuo" id="c" placeholder="搜索话题">
+                        <input type="text" class="form-control" name="search" id="c" placeholder="搜索话题">
                     </div>
-                    <button class="btn btn-default" type="submit" >搜索</button>
+                    <button class="btn btn-default" type="submit">搜索</button>
                 </form>
+                <ul class="nav navbar-nav navbar-left">
+                <li th:if=" ${session.user!=null}">
+                    <a ><span class="label label-success">最新消息:<span th:if="${session.newest!=null}" th:text="${session.newest}" id="geshu" ></span></span><span style="margin-left: 5px" id="message"></span></a>
+
+                </li>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li th:if=" ${session.user!=null}"><a
                             href="https://github.com/login/oauth/authorize?client_id=43eadde0b6dd72f33590&redirect_url=http://localhost:8887//callback&scope=user &state=1"
                             th:href="@{/publish}">发布问题</a></li>
                     <li th:if=" ${session.user!=null}"><a
                             href="/profile/zuixinhuifu">
-                    通知<span class="badge" style="background-color: #9acfea;margin-left: 1px" th:text="${session.tongzhi}">42</span>
+                        通知<span class="badge" style="background-color: #9acfea;margin-left: 1px"
+                                th:text="${session.tongzhi}">42</span>
                     </a>
                     </li>
-                    <li th:if=" ${session.user==null}" data-toggle="tooltip" data-placement="bottom" title="本站可通过 Github 账号直接注册" >
-                        <a href="/github" >登录</a>
+                    <li th:if=" ${session.user!=null}"><a
+                            href="/chat">
+                        好友聊天<!--<span class="badge" style="background-color: #9acfea;margin-left: 1px"
+                                th:text="${session.tongzhi}">42</span>-->
+                    </a>
                     </li>
+                    <li th:if=" ${session.user==null}" data-toggle="tooltip" data-placement="bottom"
+                        title="本站可通过 Github 账号直接注册">
+                        <a data-toggle="modal" data-target="#myModal" style="cursor: pointer">登录</a>
+                    </li>
+                    <!--弹出框-->
+                    <div class="modal fade" id="myModal" tabindex="-10000" role="dialog" aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="padding-bottom: 0px;">
+                                <div class="modal-header" style=" border: none;">
+                                    <div class="modal-title">
+                                        <div style="margin-left: 250px;margin-bottom: 20px;margin-top: 20px"><h3
+                                                style="margin: auto">登录</h3></div>
+                                        <form class="form-horizontal">
+                                            <div class="form-group">
+                                                <label for="inputEmail3" class="col-sm-2 control-label">用户名</label>
+                                                <div class="col-sm-10">
+                                                    <input type="email" class="form-control" id="inputEmail3"
+                                                           placeholder="Email">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputPassword3" class="col-sm-2 control-label">密码</label>
+                                                <div class="col-sm-10">
+                                                    <input type="password" class="form-control" id="inputPassword3"
+                                                           placeholder="Password">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox"> 记住我
+                                                        </label>
+                                                        <a style="float: right;font-size: 15px"
+                                                           class="label label-success" href="/github">github 直接登录</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button style="float: left" class="btn btn-success" onclick="Denglu()">登录</button>
+                                    <button data-dismiss="modal" class="btn btn-warning" type="button">取消</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <script>
                         $(function () {
                             $('[data-toggle="tooltip"]').tooltip()
@@ -56,13 +115,136 @@
                         <ul class="dropdown-menu">
                             <li><a href="/profile/action">我的问题</a></li>
                             <li><a href="/profile/zuixinhuifu">我的回复</a></li>
+                            <li><a th:href="'/people/'+${session.user.getId()}">个人主页</a></li>
                             <li><a href="/login">退出登录</a></li>
                         </ul>
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
+        <!--左滑动-->
     </nav>
+    <!--获取session里面的信息-->
+    <input type="hidden" id="name" th:if="${session.user!=null}" th:value="${session.user.getAccount()}">
+    <!--向服务器链接-->
+    <script type="text/javascript">
+        //拿到用户信息
+        var name = $("#name").val();
+        if (name == "") {
+            name = 0;
+        }
+        //判断当前浏览器是否支持WebSocket
+        if ('WebSocket' in window) {
+            webSocket = new WebSocket('ws://localhost:8887/webSocket/' + name);
+        } else {
+            alert("当前浏览器不支持WebSocket");
+        }
+        //连接发生错误的回调方法
+        webSocket.onerror = function () {
+            $("#text1").text("WebSocket连接发生错误！");
+        }
+        webSocket.onopen = function () {
+            $("#text1").text("WebSocket连接成功！")
+        }
+        //获取服务器要向客户端发送的内容
+        webSocket.onmessage = function (event) {
+          var user=JSON.parse(event.data).message;
+            if (user.stat == 4) {
+                var data = user.text;//消息内容
+                var name = user.username;//发送者姓名
+                var url =user.userUrl;//发送者头像
+                //当前消息页面为打开状态，向信息表添加消息内容
+                var div = $("#xian");
+                var c_a = $("<img/>", {
+                    "class": "img-circle",
+                    "src": url,
+                    style: 'width: 55px;height: 55px'
+                });
+                var c = $("<div/>", {
+                    "class": "media-left",
+                    style: "float:left;margin-left: 10px;"
+                });
+                var c1_a3 = $("<p/>", {
+                    "class": "label label-success",
+                    html: data,
+                    style: "font-size:15px;white-space: pre-wrap !important;"
+                })
+                var c1_a2 = $("<div/>", {
+                    "class": "mun",
+                    style: "color: #999;margin-top: 20px;",
+                });
+                var c1 = $("<div/>", {
+                    "class": "media-body",
+                });
+                var b = $("<div/>", {
+                    "class": "media",
+                    style: "    margin-top: 10px;"
+                });
+                var a = $("<div/>", {
+                    "class": "col-lg-12 col-md-12 col-sm-12 col-xs-12",
+                });
+                c1_a2.append(c1_a3)
+                c1.append(c1_a2);
+                c.append(c_a);
+                b.append(c);
+                b.append(c1);
+                a.append(b);
+                div.before(a);
+                $('#gunlun')[0].scrollTop = $('#gunlun')[0].scrollHeight;
+            } else {
+                //提示用户，有消息来了，查收
+                 $("#geshu").text(user.geshu)
+                $("#message").text(user.userName + '：'+user.text);
+              /*  confirm('你收到了来自用户：' + JSON.parse(event.data).account.name + '的信息是否查看')*/
+            }
+        }
+        webSocket.onclose = function () {
+            $("#text1").text("WebSocket连接关闭");
+        }
+
+        function send() {
+            var data = {"name": "张三", "text": "c"}
+            alert(JSON.stringify(data))
+            webSocket.send(JSON.stringify(data));
+        }
+    </script>
+</div>
+
+<div th:fragment="zuohualun">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <script src="/js/sidebar.js"></script>
+    <div id="wrapper" style="left:0;">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="headSculpture">
+                <img src="images/headSculpture.jpg" alt="">
+                <p>昵称：粉红色少女</p>
+            </div>
+            <div class="option">
+                <ul>
+                    <li><img src="images/home.png" alt="">
+                        <p>首页</p>
+                    </li>
+                    <li><img src="images/works.png" alt="">
+                        <p>我的作品</p>
+                    </li>
+                    <li><img src="images/release.png" alt="">
+                        <p>发布作品</p>
+                    </li>
+                    <li><img src="images/collection.png" alt="">
+                        <p>我的收藏</p>
+                    </li>
+                    <li><img src="images/setup.png" alt="">
+                        <p>设置</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 侧边栏按钮 -->
+        <button></button>
+        <!-- 内容区域 -->
+    </div>
 </div>
 </body>
 </html>
+

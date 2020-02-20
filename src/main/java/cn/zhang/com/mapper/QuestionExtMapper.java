@@ -16,4 +16,5 @@ public interface QuestionExtMapper {
     List<Question> getLikeReMenChaXun(Question example, RowBounds rowBounds);
     Long getzongshu(Question example);
     Long getzongshuRUMEN(Question example);
+    Long count();
 }

@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import redis.clients.jedis.Jedis;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @SpringBootTest
 class ZhangApplicationTests {
 
@@ -21,8 +24,14 @@ class ZhangApplicationTests {
     @Test
     public static void main(String[] args) {
        Jedis jedis= RedisD.getRedis();
-       jedis.set("a","fe");
-        System.out.println(jedis.get("a"));
+        Set<String> keys = jedis.keys("*");
+        for (String key : keys) {
+            System.out.println(key);
+        }
+      /*  HashSet<String> hkeys = (HashSet)jedis.hkeys("66666666,59437023");
+        for (String hkey : hkeys) {
+            System.out.println(hkey);
+        }*/
 
     }
 

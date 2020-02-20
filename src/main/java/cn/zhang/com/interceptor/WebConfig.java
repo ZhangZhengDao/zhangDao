@@ -14,7 +14,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(sessionInterceptor).addPathPatterns("/callback").addPathPatterns("/");
+        registry.addInterceptor(sessionInterceptor)
+                .addPathPatterns("/callback")
+                .addPathPatterns("/")
+                .addPathPatterns("/people/{id}")
+                .addPathPatterns("/chat");
         ;
     }
 }

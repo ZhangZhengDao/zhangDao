@@ -29,8 +29,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
-        <!--redis 依赖 3个-->
+        <!--redis依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!--jedis 依赖 3个-->
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
@@ -41,7 +45,11 @@
             <artifactId>commons-pool</artifactId>
             <version>1.6</version>
         </dependency>
-
+        <!--websockt依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
         <!---->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>

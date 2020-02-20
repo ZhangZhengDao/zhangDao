@@ -1,7 +1,9 @@
 package cn.zhang.com.service;
 
+import cn.zhang.com.dto.PageQuestionDTO;
 import cn.zhang.com.dto.PaginationDTO;
 import cn.zhang.com.dto.QuestionDTO;
+import cn.zhang.com.dto.QuestionandUserDTO;
 import cn.zhang.com.exception.CustomizeErrorCode;
 import cn.zhang.com.exception.CustomizeException;
 import cn.zhang.com.mapper.QuestionExtMapper;
@@ -11,6 +13,8 @@ import cn.zhang.com.model.Question;
 import cn.zhang.com.model.QuestionExample;
 import cn.zhang.com.model.User;
 import cn.zhang.com.model.UserExample;
+import cn.zhang.com.util.QuestionUtil;
+import cn.zhang.com.util.UserUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,8 +34,12 @@ public class QuerstionService {
     private QuestionMapper questionMapper;
     @Autowired(required = false)
     private QuestionExtMapper questionExtMapper;
+    @Autowired
+    private QuestionUtil questionUtil;
+    @Autowired
+    private UserUtil userUtil;
 
-    public PaginationDTO select(String account, Integer page, Integer size,  String sousuo, String redu,String remen) {
+    public PaginationDTO select(String account, Integer page, Integer size, String sousuo, String redu, String remen) {
         //定义格式
         Integer c = size * (page - 1);
         UserExample userExample = new UserExample();
@@ -75,7 +83,7 @@ public class QuerstionService {
                 question.setTitle(collect);
                 getzongshu = questionExtMapper.getzongshu(question);
                 select1 = questionExtMapper.getLike(question, new RowBounds(c, size));
-                if (!StringUtils.equals(remen,"false")){
+                if (!StringUtils.equals(remen, "false")) {
                     question.setTag(remen);
                     select1 = questionExtMapper.getLikeReMenChaXun(question, new RowBounds(c, size));
                 }
@@ -105,21 +113,13 @@ public class QuerstionService {
                         questionDTOS.add(questionDTO);
                     }
                 }
-                if (!StringUtils.isEmpty(account)) {
-                    if (user.getAccount().equals(account)) {
-                        QuestionDTO questionDTO = new QuestionDTO();
-                        questionDTO.setQuestion(question);
-                        questionDTO.setUser(user);
-                        questionDTOS.add(questionDTO);
-                    }
-                }
             }
         }
         paginationDTO.setQuestionDTOS(questionDTOS);
         Integer size1 = (int) questionMapper.countByExample(new QuestionExample());
         /*判断是否时模糊查询，是的话返回的页数也将不一样*/
-        if (!StringUtils.equals(sousuo, "false") && !StringUtils.isEmpty(sousuo)){
-            size1=Math.toIntExact(getzongshu);
+        if (!StringUtils.equals(sousuo, "false") && !StringUtils.isEmpty(sousuo)) {
+            size1 = Math.toIntExact(getzongshu);
         }
         paginationDTO.setPagination(size1, page, size);
         return paginationDTO;
@@ -179,17 +179,50 @@ public class QuerstionService {
 
     public List<Question> likegetListCommentType2(QuestionDTO questionDTO) {
         //分割tag
-        String[] tag=questionDTO.getQuestion().getTag().split(",");
+        String[] tag = questionDTO.getQuestion().getTag().split(",");
         String collect = Arrays.stream(tag).collect(Collectors.joining("|"));
-        Question question=questionDTO.getQuestion();
+        Question question = questionDTO.getQuestion();
         question.setId(questionDTO.getQuestion().getId());
         question.setTag(collect);
         List<Question> selectlike = questionExtMapper.selectlike(question);
         return selectlike;
     }
 
-    public PaginationDTO getReMenWenti(String redu, Integer page, Integer size) {
 
-        return null;
+    public QuestionandUserDTO gitUserWenti(User user, Integer page, Integer size) {
+        QuestionExample example = new QuestionExample();
+        example.createCriteria().andCreatorEqualTo(user.getId());
+        List<Question> questions = questionMapper.selectByExample(example);
+        QuestionandUserDTO questionandUserDTO = new QuestionandUserDTO();
+        questionandUserDTO.setQuestions(questions);
+        questionandUserDTO.setUser(user);
+        questionandUserDTO.getfenyeshu(questions.size());
+        return questionandUserDTO;
+    }
+
+    /**
+     * @return 返回分页集合
+     * @apiNote zhangzheng
+     */
+    public PageQuestionDTO friendQuestionAll(Integer page, Integer size, String search,String hot) {
+        PageQuestionDTO<QuestionDTO> pageQuestionDTO = new PageQuestionDTO<>();
+        List<Question> questionLimit = new ArrayList<>();
+        if (!StringUtils.equals(search, "false")) {
+            questionLimit = questionUtil.findQuestionLike(page, size, search);
+            Question example = new Question();
+            example.setTitle(search);
+            pageQuestionDTO.getfenyeshu(Math.toIntExact(questionExtMapper.getzongshu(example)), size);
+        }else if (!StringUtils.equals(hot, "false")){
+            questionLimit=questionUtil.findQuestionLable(page,size,hot);
+            Question example = new Question();
+            example.setTag(hot);
+            pageQuestionDTO.getfenyeshu(Math.toIntExact(questionExtMapper.getzongshuRUMEN(example)), size);
+        } else{
+            questionLimit = questionUtil.findQuestionLimit(page, size);
+            pageQuestionDTO.getfenyeshu(Math.toIntExact(questionExtMapper.count()), size);
+        }
+        List<QuestionDTO> userAndQuestionAll = userUtil.findUserAndQuestionAll(questionLimit);
+        pageQuestionDTO.setQuestionDTOS(userAndQuestionAll);
+        return pageQuestionDTO;
     }
 }

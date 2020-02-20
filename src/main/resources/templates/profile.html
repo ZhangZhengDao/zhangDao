@@ -20,32 +20,32 @@
             <hr>
             <!--内容行-->
             <!--内容行-->
-            <div class="media" th:each="a : ${zhang1.questionDTOS}" th:if="${modelName.equals('我的提问')}">
+            <div class="media" th:each="a : ${zhang1.getQuestions()}" th:if="${modelName.equals('我的提问')}">
                 <div class="media-left">
-                    <a th:href="${'/question/'+a.getQuestion().getId()}">
-                        <img style="width: 55px;height: 55px" class="img-rounded" th:src="@{${a.user.getAvatarUrl()}}">
+                    <a th:href="${'/question/'+a.getId()}">
+                        <img style="width: 55px;height: 55px" class="img-rounded" th:src="@{${zhang1.getUser().getAvatarUrl()}}">
                     </a>
                 </div>
                 <div class="media-body">
-                    <h4 class="media-heading" th:text="${a.getQuestion().getTitle()}">用户名</h4>
+                    <h4 class="media-heading" th:text="${a.getTitle()}">用户名</h4>
                     <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${a.getQuestion().getDescription()}"></span>
+                          th:text="${a.getDescription()}"></span>
                     <br>
                     <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${a.getQuestion().description}"></span>
+                          th:text="${a.description}"></span>
                     <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${a.getQuestion().getCommentCount()}"
-                          th:if="${a.getQuestion().getCommentCount()!=null}"></span>
+                          th:text="${a.getCommentCount()}"
+                          th:if="${a.getCommentCount()!=null}"></span>
                     <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0"
-                          th:if="${a.getQuestion().getCommentCount()==null}"></span>个回复 .
+                          th:if="${a.getCommentCount()==null}"></span>个回复 .
                     <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${a.getQuestion().getViewCount()}"
-                          th:if="${a.getQuestion().getViewCount()!=null}"></span>
+                          th:text="${a.getViewCount()}"
+                          th:if="${a.getViewCount()!=null}"></span>
                     <span style="font-size: 12px;font-weight: normal;color: #999" th:text="0"
-                          th:if="${a.getQuestion().getViewCount()==null}"></span>次浏览 .
+                          th:if="${a.getViewCount()==null}"></span>次浏览 .
                     <span style="font-size: 12px;font-weight: normal;color: #999"
-                          th:text="${#dates.format(a.getQuestion().getGmtModified(),'mm:HH dd MMM yyyy')}"></span>
-                    <a th:href="${'/questionBainji/'+a.getQuestion().getId()}" class="glyphicon glyphicon-pencil" style="font-size: 12px;font-weight: normal;color: #999;cursor: pointer;">编辑</a>
+                          th:text="${#dates.format(a.getGmtModified(),'mm:HH dd MMM yyyy')}"></span>
+                    <a th:href="${'/questionBainji/'+a.getId()}" class="glyphicon glyphicon-pencil" style="font-size: 12px;font-weight: normal;color: #999;cursor: pointer;">编辑</a>
                     <hr>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
-                    <li><a th:href="@{/profile/action/(page=${a})}"  th:each="a : ${zhang1.pages}" th:text="${a}"></a></li>
+                    <li><a th:href="@{/profile/action/(page=${a})}"  th:each="a : ${zhang1.getYigong()}" th:text="${a}"></a></li>
                     <li>
                         <a href="#" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -68,7 +68,7 @@
             <div class="panel panel-default" th:if="${modelName.equals('最新回复')&&zhang!=null}">
                 <table class="table table-hover" >
                     <tr th:each="a:${zhang.getNotFicationAndUserDTOlist()}" style="cursor: pointer">
-                        <td th:data-id="${a.getNotiFication().getId()}" onclick="dianji(this)" style="width: 95%">
+                        <td th:data-id="${a.getNotiFication().getId()}+','+${a.getNotiFication().getType()}" onclick="dianji(this)" style="width: 95%">
                             <div class="panel-body" style="margin: -10px">
                                 <span class=" glyphicon glyphicon-user " style="color: #9acfea"></span>
                                 <span>用户:</span>
@@ -80,10 +80,12 @@
                                 <span th:if="${a.getNotiFication().getType()==2}">
                         <span><strong>评论了你的回复:</strong></span>
                     </span>
-                                <em><strong class="text-primary" th:text="${a.getQuestion().getTitle()}"></strong></em>
+                                <em th:if="${a.getNotiFication().getType()!=5}"><strong class="text-primary" th:text="${a.getQuestion().getTitle()}"></strong></em>
+                                <em th:if="${a.getNotiFication().getType()==5}"><strong class="text-primary" >已添加你为好友，互相关注后，你们就可以互相发消息啦</strong></em>
                             </div>
                         </td>
                         <td >
+                            <button th:if="${a.getNotiFication().getType()==5}" th:data-id="${a.getNotiFication().getId()}" onclick="friendUser(this)" style="float: right;margin-right: 10px" type="button" class="btn btn-success btn-xs">互相关注</button>
                             <span class="label label-warning ">未读</span>
                         </td>
                     </tr>

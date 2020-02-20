@@ -1,22 +1,22 @@
 package cn.zhang.com.controller;
 
-import cn.zhang.com.dto.AccessTokenDTO;
-import cn.zhang.com.dto.GithubUser;
-import cn.zhang.com.dto.PaginationDTO;
+import cn.zhang.com.dto.*;
+import cn.zhang.com.exception.CustomizeErrorCode;
 import cn.zhang.com.model.User;
 import cn.zhang.com.provider.GithubProvider;
 import cn.zhang.com.service.NotFicationService;
 import cn.zhang.com.service.QuerstionService;
 import cn.zhang.com.service.UserService;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
+import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -31,12 +31,23 @@ public class AuthorizeController {
     @Autowired
     private UserService userService;
 
+    //github
     @Value("${github.Client_id}")
     private String Client_id;
     @Value("${github.Client_secret}")
     private String Client_secret;
     @Value("${github.Redirect_url}")
     private String Redirect_url;
+    //码云
+    @Value("${mayun.Client_id}")
+    private String mayun_Client_id;
+    @Value("${mayun.Client_secret}")
+    private String mayun_Client_secret;
+    @Value("${mayun.Redirect_url}")
+    private String mayun_Redirect_url;
+
+    @Autowired
+    private NotFicationService notFicationService;
 
     @Autowired
     private QuerstionService querstionService;
@@ -94,8 +105,13 @@ public class AuthorizeController {
 
     }
 
-    @Autowired
-    private NotFicationService notFicationService;
+   /*码云第三方登录*/
+    @RequestMapping(value = "/mayun",method = RequestMethod.GET)
+    public String mayun(@RequestParam(name = "code",defaultValue = "false") String code
+                   ){
+        System.out.println(code);
+        return "redirect:/";
+    }
 
     /*退出登录*/
     @GetMapping("/login")
@@ -116,7 +132,34 @@ public class AuthorizeController {
     public String github(HttpServletRequest request,
                          HttpServletResponse response) {
         return "redirect:https://github.com/login/oauth/authorize?client_id="+Client_id+"&redirect_url=http://localhost:8887//callback&scope=user&state=1";
+    }
+    /*码云登录地址*/
+    @RequestMapping("/mayunDenglu")
+    public String mayun(HttpServletRequest request,
+                         HttpServletResponse response) {
+        return "redirect:https://gitee.com/oauth/authorize?client_id="+mayun_Client_id+"&redirect_url=http://127.0.0.1:8887/mayun&response_type=code";
+    }
 
-
+    /*普通用户登录判断*/
+    @ResponseBody
+    @RequestMapping(value = "/Denglu" ,method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public ResultDTO Denglu(@RequestBody JSONObject jsonpObject,HttpServletRequest request,HttpServletResponse response){
+        //根据内容判断用户是否登录成功
+        User user=new User();
+        user.setName(jsonpObject.get("name").toString());
+        user.setPasswd(jsonpObject.get("password").toString());
+        user=userService.Denglu(user);
+        if (user==null){
+        return   new ResultDTO<>().denglu(CustomizeErrorCode.INVALID_DENGLU);
+        }
+        //写入cookie和session
+        /*向数据库查询当前用户的未读通知数*/
+        Integer c=notFicationService.getNotFsize(user.getAccount());
+        request.getSession().setAttribute("tongzhi",c);
+        request.getSession().setAttribute("user", user);
+        //写入cookie
+        Cookie cookie = new Cookie("token", user.getToken());
+        response.addCookie(cookie);
+        return   new ResultDTO<>().denglu(CustomizeErrorCode.INVALID_DENGLUCENGGOGN);
     }
 }

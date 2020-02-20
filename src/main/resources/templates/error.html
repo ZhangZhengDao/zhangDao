@@ -15,8 +15,8 @@
     <div class="row">
         <div class="jumbotron">
             <h1>页面出现异常正在紧急修复中</h1>
-            <p>正在加班该bug中。。。。。。</p>
-            <p th:text="${message}" th:if="${message!=null}"></p>
+            <p  th:if="${message!=null&&!message.equals('No message available')}" th:text="${message}"></p>
+            <p th:if="${message!=null&&message.equals('No message available')}">你访问的页面不存在</p>
             <p><a class="btn btn-primary btn-lg" href="/" role="button">回到主页</a> <img ty src="/timg.gif"
                                                                                       style="width: 100px;height: 100px">
             </p>
