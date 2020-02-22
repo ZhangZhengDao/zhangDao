@@ -46,20 +46,25 @@ public class UserutilImp implements UserUtil {
         }
     }
 
+/*
+*
+* 获取用户的最新未读消息*/
     @Override
-    public int newestsize(Jedis jedis, String account) {
-        Map<String, String> map = jedis.hgetAll("newestMap" + account);
-        int c = 0;
-        List<Integer> in = new ArrayList<>();
-        map.forEach((k, v) -> {
-            if (!k.contains("text")) {
-                in.add(Integer.valueOf(v));
-            }
-        });
-        for (Integer integer : in) {
-            c = integer + c;
+    public String  newestsize(Jedis jedis, String account) {
+        Boolean exists = jedis.exists("newestMap" + account);
+        if (exists==false){
+            return "";
         }
-        return c;
+         List<String> c=new ArrayList<>();
+        if (exists==true){
+            Map<String, String> map = jedis.hgetAll("newestMap" + account);
+            map.forEach((k,v)->{
+                if (k.contains("text")==false&&k.contains("data")==false){
+                    c.add(v);
+                }
+            });
+        }
+        return c.get(0);
     }
 
     @Override

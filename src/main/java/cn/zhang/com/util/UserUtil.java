@@ -21,7 +21,7 @@ public interface UserUtil {
     //增加用户未读消息
     public void Userunread(Jedis jedis,String daccount,String text,User user);
     /*得到未读消息的数量*/
-    public int newestsize(Jedis jedis,String account);
+    public String newestsize(Jedis jedis,String account);
     /*拿到用户所有信息*/
     public peopleDTO UserLook(User user,  UserMapper userMapper, QuestionMapper questionMapper, CommentMapper commentMapper);
     /*计算出用户经常提问 和 回复的问题标签*/

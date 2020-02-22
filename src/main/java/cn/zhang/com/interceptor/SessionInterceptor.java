@@ -46,8 +46,8 @@ public class SessionInterceptor implements HandlerInterceptor {
                         Integer c = notFicationService.getNotFsize(users.get(0).getAccount());
                         request.getSession().setAttribute("tongzhi", c);
                         /*查询最新消息*/
-                        Jedis jedis = RedisD.getRedis();
-                        int newestsize = userutilImp.newestsize(jedis, users.get(0).getAccount());
+                       Jedis jedis = RedisD.getRedis();
+                        String    newestsize = userutilImp.newestsize(jedis, users.get(0).getAccount());
                         request.getSession().setAttribute("newest", newestsize);
                         return true;
                     }

@@ -24,7 +24,7 @@ public class RedisD {
 
     public static Jedis getRedis() {
         //连接本地的 Redis 服务
-        Jedis jedis = new Jedis("http://106.75.80.178", 6379);
+        Jedis jedis = new Jedis("106.75.80.178", 6379);
         /* jedis.auth("214834");*/
         return jedis;
     }
@@ -118,7 +118,7 @@ public class RedisD {
 
     /*清除用户已读的未读消息*/
     public void reomnewest(Jedis jedis, String account, String daccount) {
-        jedis.hdel("newestMap" + account, daccount, "text" + daccount);
+        jedis.del("newestMap" + account);
     }
 
     /*向用户发送消息*/

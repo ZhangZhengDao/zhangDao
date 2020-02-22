@@ -39,8 +39,8 @@ public class WebSocket {
         this.session = session;
         this.name = name;
         Jedis jedis = RedisD.getRedis();
+        System.out.println(name);
         Boolean aBoolean = jedis.exists(name);
-        System.out.println(name + "{{{{{{{{{{{{{{{{{{{{{{");
         if (aBoolean == false) {
             if (!name.equals("undefined")) {
                 //给他一个状态，信息列表未被打开

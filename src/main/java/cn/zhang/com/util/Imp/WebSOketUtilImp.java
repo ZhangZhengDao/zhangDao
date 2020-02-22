@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 import redis.clients.jedis.Jedis;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 @Service
