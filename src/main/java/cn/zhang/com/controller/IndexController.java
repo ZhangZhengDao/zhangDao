@@ -1,25 +1,14 @@
 package cn.zhang.com.controller;
 
-import cn.zhang.com.config.RdisConfig;
-import cn.zhang.com.config.WebSocket;
 import cn.zhang.com.dto.*;
-import cn.zhang.com.model.QuestionExample;
-import cn.zhang.com.model.User;
 import cn.zhang.com.schedule.HoTaagCache;
-import cn.zhang.com.schedule.HotTagTasks;
 import cn.zhang.com.service.QuerstionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.util.StringUtils;
-import redis.clients.jedis.Jedis;
-
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 

@@ -19,8 +19,6 @@ public class NotController {
     private NotFicationService notFicationService;
     @Autowired
     private DianzanService dianzanService;
-    @Autowired
-    private UserutilImp userutilImp;
 
     //根据id判断消息是否为已读状态
     @GetMapping("/NotController/{id}")
