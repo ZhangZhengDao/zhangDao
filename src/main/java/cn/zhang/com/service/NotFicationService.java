@@ -1,19 +1,18 @@
 package cn.zhang.com.service;
 
+import cn.zhang.com.dto.MessageDTO;
 import cn.zhang.com.dto.NoitPaginationDTO;
 import cn.zhang.com.dto.NotFicationAndUserDTO;
-import cn.zhang.com.dto.RedisD;
 import cn.zhang.com.enums.AdministratorSendEnum;
 import cn.zhang.com.enums.NotificationEnum;
 import cn.zhang.com.mapper.*;
 import cn.zhang.com.model.*;
-import cn.zhang.com.util.Imp.UserutilImp;
+import cn.zhang.com.util.Imp.StringUtil;
 import cn.zhang.com.util.NoitPaginatonUtil;
 import cn.zhang.com.util.UserUtil;
 import cn.zhang.com.util.WebSoketUtil;
 import cn.zhang.com.util.friendUtil;
 import org.apache.ibatis.session.RowBounds;
-import org.omg.PortableInterceptor.INACTIVE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,7 +88,7 @@ public class NotFicationService {
         noitPaginationDTO.setNotFicationAndUserDTOlist(list1);
         //给到数据库数据总数算出页数
         int size1 = notiFicationMapper.selectByExample(example).size();
-        noitPaginationDTO.getfenyeshu(size1);
+        noitPaginationDTO.gentleness(size1);
         return noitPaginationDTO;
     }
 
@@ -169,8 +168,11 @@ public class NotFicationService {
         user = userUtil.IDfidUser(user.getId().toString());
         request.getSession().setAttribute("user", user);
         //向互相关注的用户发送通知
-        webSoketUtil.senmessageUser(user.getId(),Math.toIntExact(notiFication.getNotifier()), AdministratorSendEnum.AdministratorSend.getContent());
-        webSoketUtil.senmessageUser(Math.toIntExact(notiFication.getNotifier()),user.getId(), AdministratorSendEnum.AdministratorSend.getContent());
+        MessageDTO messageDTO=new MessageDTO();
+        messageDTO.setText(AdministratorSendEnum.AdministratorSend.getContent());
+        messageDTO.setData(StringUtil.getData());
+        webSoketUtil.senmessageUser(user.getId(),Math.toIntExact(notiFication.getNotifier()), messageDTO);
+        webSoketUtil.senmessageUser(Math.toIntExact(notiFication.getNotifier()),user.getId(), messageDTO);
 
     }
 

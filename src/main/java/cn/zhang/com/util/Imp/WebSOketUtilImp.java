@@ -26,27 +26,28 @@ public class WebSOketUtilImp implements WebSoketUtil {
     private WebSocket webSocket;
 
     @Override
-    public void senmessageUser(Integer userID, Integer friendID, String text) {
+    public void senmessageUser(Integer userID, Integer friendID, MessageDTO messageDTO) {
         User user = userUtil.IDfidUser(userID.toString());
         if (user == null) {
             return;
         }
         WebSoketStatEnum webSoketStatEnum = friendSndStat(userID, friendID);
-        MessageDTO messageDTO=new MessageDTO();
         User friendUser = userUtil.IDfidUser(friendID.toString());
         //拿到用户的 websok 端口
         Jedis jedis = RedisD.getRedis();
         Map<String, String> map = jedis.hgetAll(friendUser.getAccount());
         JSONObject jsonObject=new JSONObject();
-        redisD.setJilu(user, friendUser.getAccount(), text);
+        redisD.setJilu(user, friendUser.getAccount(), messageDTO.getText(),messageDTO.getData());
         //根据状态判断发送什么样的消息类型
         if (StringUtils.equals(webSoketStatEnum.getDescribe(), WebSoketStatEnum.WEBSOKETSTAT_FALSE.getDescribe())) {
             //消息接收者不在线，添加聊天记录和未读消息
+            redisD.AddfriendNewest(friendUser.getAccount(),messageDTO.getText(),user,messageDTO.getData());
             return;
         } else if (StringUtils.equals(webSoketStatEnum.getDescribe(), WebSoketStatEnum.WEBSOKETSTAT_TRUE.getDescribe())) {
             //在线，但未打开聊天窗口
             //向消息接收者发送实时消息
-            messageDTO = sendMessageBean(user, friendUser, text,webSoketStatEnum.getStat());
+            messageDTO = sendMessageBean(user, friendUser, messageDTO.getText(),webSoketStatEnum.getStat(),messageDTO.getData());
+            redisD.AddfriendNewest(friendUser.getAccount(),messageDTO.getText(),user,messageDTO.getData());
             jsonObject.put("message",messageDTO);
             try {
                 webSocket.sedUser(map.get("id"),jsonObject);
@@ -57,7 +58,8 @@ public class WebSOketUtilImp implements WebSoketUtil {
         } else if (StringUtils.equals(webSoketStatEnum.getDescribe(), WebSoketStatEnum.WEBSOKETSTAT_MASG.getDescribe())) {
             //在线打开了聊天敞口但不是当前用户
             //向消息接收者发送实时消息
-            messageDTO = sendMessageBean(user, friendUser, text,webSoketStatEnum.getStat());
+            messageDTO = sendMessageBean(user, friendUser, messageDTO.getText(),webSoketStatEnum.getStat(),messageDTO.getData());
+            redisD.AddfriendNewest(friendUser.getAccount(),messageDTO.getText(),user,messageDTO.getData());
             jsonObject.put("message",messageDTO);
             try {
                 webSocket.sedUser(map.get("id"),jsonObject);
@@ -68,7 +70,7 @@ public class WebSOketUtilImp implements WebSoketUtil {
         } else if (StringUtils.equals(webSoketStatEnum.getDescribe(), WebSoketStatEnum.WEBSOKETSTAT_MASGTRUE.getDescribe())) {
             //两个用户都打开了对方的窗口
             //直接向接受者发送消息
-            messageDTO=sendMessageBean(user,friendUser,text,webSoketStatEnum.getStat());
+            messageDTO=sendMessageBean(user,friendUser,messageDTO.getText(),webSoketStatEnum.getStat(),messageDTO.getData());
             jsonObject.put("message",messageDTO);
             try {
                 webSocket.sedUser(map.get("id"),jsonObject);
@@ -80,16 +82,17 @@ public class WebSOketUtilImp implements WebSoketUtil {
     }
 
     @Override
-    public MessageDTO sendMessageBean(User user, User duser, String text,Integer stat) {
+    public MessageDTO sendMessageBean(User user, User duser, String text,Integer stat,String data) {
         MessageDTO messageDTO=new MessageDTO();
         messageDTO.setText(text);
-        messageDTO.setDUrl(duser.getAvatarUrl());
-        messageDTO.setDName(duser.getName());
-        messageDTO.setDAccount(duser.getAccount());
+        messageDTO.setdUrl(duser.getAvatarUrl());
+        messageDTO.setdName(duser.getName());
+        messageDTO.setdAccount(duser.getAccount());
         messageDTO.setUserAccount(user.getAccount());
         messageDTO.setUserName(user.getName());
         messageDTO.setUserUrl(user.getAvatarUrl());
         messageDTO.setStat(stat);
+        messageDTO.setData(data);
         return messageDTO;
     }
 

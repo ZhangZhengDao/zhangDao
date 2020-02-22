@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.util.List;
 
-/*聊天信息表*/
 @Data
 public class friendTextDTO {
     private User user;//数量

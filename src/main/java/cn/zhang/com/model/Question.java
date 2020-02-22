@@ -1,5 +1,8 @@
 package cn.zhang.com.model;
 
+import lombok.Data;
+
+@Data
 public class Question {
     /**
      *

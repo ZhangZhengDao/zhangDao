@@ -13,7 +13,7 @@ public class NoitPaginationDTO {
 
 
     /*计算一共多少页*/
-    public void getfenyeshu(Integer integer){
+    public void gentleness(Integer integer){
         //拿到给出的总数后取余
         List<Integer> y=new ArrayList<>();
         if (integer%10==0){

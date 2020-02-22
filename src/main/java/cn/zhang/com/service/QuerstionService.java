@@ -1,9 +1,6 @@
 package cn.zhang.com.service;
 
-import cn.zhang.com.dto.PageQuestionDTO;
-import cn.zhang.com.dto.PaginationDTO;
-import cn.zhang.com.dto.QuestionDTO;
-import cn.zhang.com.dto.QuestionandUserDTO;
+import cn.zhang.com.dto.*;
 import cn.zhang.com.exception.CustomizeErrorCode;
 import cn.zhang.com.exception.CustomizeException;
 import cn.zhang.com.mapper.QuestionExtMapper;
@@ -13,6 +10,7 @@ import cn.zhang.com.model.Question;
 import cn.zhang.com.model.QuestionExample;
 import cn.zhang.com.model.User;
 import cn.zhang.com.model.UserExample;
+import cn.zhang.com.schedule.HoTaagCache;
 import cn.zhang.com.util.QuestionUtil;
 import cn.zhang.com.util.UserUtil;
 import org.apache.ibatis.session.RowBounds;
@@ -22,6 +20,7 @@ import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,6 +37,8 @@ public class QuerstionService {
     private QuestionUtil questionUtil;
     @Autowired
     private UserUtil userUtil;
+    @Autowired
+    private HoTaagCache hoTaagCache;
 
     public PaginationDTO select(String account, Integer page, Integer size, String sousuo, String redu, String remen) {
         //定义格式
@@ -100,6 +101,7 @@ public class QuerstionService {
                 select1 = questionExtMapper.getLikeREmen(question, new RowBounds(c, size));
             }
         }
+        friendDTO friendDTO = new friendDTO();
         List<QuestionDTO> questionDTOS = new ArrayList<QuestionDTO>();
         PaginationDTO paginationDTO = new PaginationDTO();
         for (Question question : select1) {
@@ -201,23 +203,29 @@ public class QuerstionService {
     }
 
     /**
+     * @param hot      热门标签
+     * @param search   搜索
+     * @param property 话题
      * @return 返回分页集合
      * @apiNote zhangzheng
      */
-    public PageQuestionDTO friendQuestionAll(Integer page, Integer size, String search,String hot) {
+    public PageQuestionDTO friendQuestionAll(Integer page, Integer size, String search, String hot, String property) {
         PageQuestionDTO<QuestionDTO> pageQuestionDTO = new PageQuestionDTO<>();
         List<Question> questionLimit = new ArrayList<>();
-        if (!StringUtils.equals(search, "false")) {
+        if (!StringUtils.equals(property, "false")) {
+            questionLimit=questionUtil.classify(page,size,property);
+            pageQuestionDTO.getfenyeshu(hoTaagCache.getFindQuestionHottest().size(),size);
+        } else if (!StringUtils.equals(search, "false")) {
             questionLimit = questionUtil.findQuestionLike(page, size, search);
             Question example = new Question();
             example.setTitle(search);
             pageQuestionDTO.getfenyeshu(Math.toIntExact(questionExtMapper.getzongshu(example)), size);
-        }else if (!StringUtils.equals(hot, "false")){
-            questionLimit=questionUtil.findQuestionLable(page,size,hot);
+        } else if (!StringUtils.equals(hot, "false")) {
+            questionLimit = questionUtil.findQuestionLabel(page, size, hot);
             Question example = new Question();
             example.setTag(hot);
             pageQuestionDTO.getfenyeshu(Math.toIntExact(questionExtMapper.getzongshuRUMEN(example)), size);
-        } else{
+        } else {
             questionLimit = questionUtil.findQuestionLimit(page, size);
             pageQuestionDTO.getfenyeshu(Math.toIntExact(questionExtMapper.count()), size);
         }

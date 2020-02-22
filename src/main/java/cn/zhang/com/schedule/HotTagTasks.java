@@ -1,5 +1,6 @@
 package cn.zhang.com.schedule;
 
+import cn.zhang.com.dto.QuestionDTO;
 import cn.zhang.com.dto.RedisD;
 import cn.zhang.com.dto.TagsDTO;
 import cn.zhang.com.mapper.QuestionMapper;
@@ -73,14 +74,41 @@ public class HotTagTasks {
         log.info("The time is now {}", new Date());//日志
     }
 
-    //记录用户在线还是离线 每次运行的时候清除 redis 中未删除掉的数据
-    @Scheduled(fixedRate = 1000 * 60 * 60 * 24)//每隔一分钟判断一次所有用户状态
+    /*
+     * 查询热度最高的用户信息
+     * */
+    @Scheduled(fixedRate = 1000 * 60 * 60)
     public void lixian() {
-        List<User> users = userMapper.selectByExample(new UserExample());
-        Jedis jedis = RedisD.getRedis();
-        for (User user : users) {
-            jedis.del(user.getAccount());
+        QuestionExample example = new QuestionExample();
+        example.createCriteria().andCommentCountNotEqualTo(0);
+        List<Question> questions = questionMapper.selectByExample(example);
+        Map<String, Integer> map = new HashMap<>();
+        for (Question question : questions) {
+            Integer id = question.getId();
+            Integer num = question.getViewCount() * 2 + question.getCommentCount() * 10 + question.getLikeCount() * 5;
+            if (num < 200) {
+                continue;
+            }
+            map.put(id + "", num);
         }
+        List<TagsDTO> paixu = hoTaagCache.paixu(map);
+        List<Question> list = new ArrayList<>();
+        for (TagsDTO tagsDTO : paixu) {
+            Question question = questionMapper.selectByPrimaryKey(Integer.valueOf(tagsDTO.getIs()));
+            list.add(question);
+        }
+        hoTaagCache.setFindQuestionHottest(list);
     }
-
+    /*
+    * 查询出没有任何人回复的问题集合
+    *
+    * */
+    @Scheduled(fixedRate = 1000 * 60 * 60)
+    public void reply(){
+        QuestionExample example = new QuestionExample();
+        example.createCriteria().andCommentCountEqualTo(0);
+        example.setOrderByClause("gmt_create desc");
+        List<Question> questions = questionMapper.selectByExample(example);
+        hoTaagCache.setFindQuestionNotReply(questions);
+    }
 }

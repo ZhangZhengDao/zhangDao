@@ -1,7 +1,7 @@
 package cn.zhang.com.exception;
 
 /**
- * Created by codedrinker on 2019/5/28.
+ * Created by codebreaker on 2019/5/28.
  */
 public enum CustomizeErrorCode implements ICustomizeErrorCode {
 
@@ -17,8 +17,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     FILE_UPLOAD_FAIL(2010, "图片上传失败"),
     INVALID_INPUT(2011, "非法输入"),
     INVALID_OPERATION(2013, "您要找的用户不存在了"),
-    INVALID_DENGLU(2014, "登录失败用户名或密码错误"),
-    INVALID_DENGLUCENGGOGN(2000, "登录成功"),
+    INVALID_DANGLE(2014, "登录失败用户名或密码错误"),
+    INVALID_DECLENSION(2000, "登录成功"),
     INVALID_Friend(2015, "你并不是对方好友,不能使用发消息功能"),
     INVALID_FriendQITA(2016, "你收到新的信息")
     ;

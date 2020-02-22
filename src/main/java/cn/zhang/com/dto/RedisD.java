@@ -30,16 +30,16 @@ public class RedisD {
     }
 
     /*存储用户的聊天记录*/
-    public void setJilu( User user, String account, String text) {
+    public void setJilu( User user, String account, String text,String data) {
         Jedis jedis=RedisD.getRedis();
         //先判断他们 是不是已经有了 消息记录
         String aaa = panduan(jedis, user, account);
         if (aaa != null) {
             Integer c = Math.toIntExact(jedis.llen(aaa)) + 1;
-            jedis.rpush(aaa, user.getAccount() + ":" + c + ":" + text);
+            jedis.rpush(aaa, user.getAccount() + ":" + c + ":" + text+":"+data);
         } else {
             //第一次来天 创建聊天记录就
-            jedis.lpush(user.getAccount() + "," + account, user.getAccount() + ":" + 1 + ":" + text);
+            jedis.lpush(user.getAccount() + "," + account, user.getAccount() + ":" + 1 + ":" + text+":"+data);
         }
     }
 
@@ -137,7 +137,7 @@ public class RedisD {
 
     }
     /*添加用户的未读消息*/
-    public void AddfriendNewest(String daccount, String text, User user) {
+    public void AddfriendNewest(String daccount, String text, User user,String data) {
         Jedis jedis=RedisD.getRedis();
         Boolean aBoolean = jedis.exists("newestMap" + daccount);
         if (aBoolean) {
@@ -145,10 +145,12 @@ public class RedisD {
             if (hmget.size() != 0) {
                 jedis.hincrBy("newestMap" + daccount, user.getAccount(), 1);
                 jedis.hset("newestMap" + daccount, "text"+user.getAccount(), text);
+                jedis.hset("newestMap" + daccount,"data",data);
             } else {
                 Map<String, String> map = new HashMap<>();
                 map.put("text"+user.getAccount(), text);
                 map.put(user.getAccount(), 1 + "");
+                map.put("data",data);
                 jedis.hmset("newestMap" + daccount, map);
             }
         } else {

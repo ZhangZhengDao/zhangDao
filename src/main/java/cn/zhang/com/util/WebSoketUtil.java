@@ -6,7 +6,7 @@ import cn.zhang.com.model.User;
 
 public interface WebSoketUtil  {
     //根据所给id向用户发送消息
-    public void senmessageUser(Integer UserID,Integer friendID,String data);
+    public void senmessageUser(Integer UserID,Integer friendID,MessageDTO messageDTO);
     /*封装客户端接收端信息*/
-    public MessageDTO sendMessageBean(User user, User duser, String data, Integer stat);
+    public MessageDTO sendMessageBean(User user, User duser, String text, Integer stat,String data);
 }

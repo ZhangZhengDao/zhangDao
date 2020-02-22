@@ -8,15 +8,11 @@ import cn.zhang.com.service.NotFicationService;
 import cn.zhang.com.service.QuerstionService;
 import cn.zhang.com.service.UserService;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.util.StringUtils;
-import redis.clients.jedis.Jedis;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -150,7 +146,7 @@ public class AuthorizeController {
         user.setPasswd(jsonpObject.get("password").toString());
         user=userService.Denglu(user);
         if (user==null){
-        return   new ResultDTO<>().denglu(CustomizeErrorCode.INVALID_DENGLU);
+        return   new ResultDTO<>().denglu(CustomizeErrorCode.INVALID_DANGLE);
         }
         //写入cookie和session
         /*向数据库查询当前用户的未读通知数*/
@@ -160,6 +156,6 @@ public class AuthorizeController {
         //写入cookie
         Cookie cookie = new Cookie("token", user.getToken());
         response.addCookie(cookie);
-        return   new ResultDTO<>().denglu(CustomizeErrorCode.INVALID_DENGLUCENGGOGN);
+        return   new ResultDTO<>().denglu(CustomizeErrorCode.INVALID_DECLENSION);
     }
 }

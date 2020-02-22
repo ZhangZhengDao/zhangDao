@@ -43,16 +43,17 @@ public class webSoketController {
     @PostMapping("/jieshou")
     public Object jieshou(@RequestBody MessageDTO messageDTO, HttpServletRequest request) throws IOException {
         User user = (User) request.getSession().getAttribute("user");
-        String dAccount = messageDTO.getDAccount();
+        String dAccount = messageDTO.getdAccount();
+        System.out.println(messageDTO.getData());
         User friendUser = userutilImp.AccountfidUser(dAccount);
         if (user == null) {
             return ResultDTO.denglu(CustomizeErrorCode.NO_LOGIN);
         }
         //判断他们是否是好友
-        if (!friendUtil.addfriend(user.getId(), friendUser.getId())) {
+        if (!friendUtil.friendboolean(user.getId(), friendUser.getId())) {
             return ResultDTO.denglu(CustomizeErrorCode.INVALID_Friend);
         }
-        webSoketUtil.senmessageUser(user.getId(), friendUser.getId(), messageDTO.getText());
+        webSoketUtil.senmessageUser(user.getId(), friendUser.getId(),messageDTO);
         //给发送端的数据
         return "cengg";
     }

@@ -13,7 +13,7 @@ $(function () {
                 /*添加元素*/
                 var name = $("#SessionName").val();
                 var url = $("#SessionUrl").val();
-                zuo(message, 1, url, name, "append");
+                zuo(message, 1, url, name, "append",shijan());
                 chat_body.scrollTop(chat_body.get(0).scrollHeight, -1).niceScroll({
                     cursorcolor: 'rgba(66, 66, 66, 0.20)',
                     cursorwidth: "4px",
@@ -46,7 +46,8 @@ $(function () {
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify({
                 "text": message,//发送内容
-                "daccount": daccount//接收人account
+                "dAccount": daccount,//接收人account
+                "data":shijan()
             }),
             success: function (response) {//成功回调函数
                 if (response.code == "2015") {
@@ -105,9 +106,17 @@ $(function () {
                 for (var listKey in list.reverse()) {
                     var splic = list[listKey].split(":");
                     if (splic[0] != message.val()) {
-                        zuo(splic[2], 1, url, name, "");
+                        if (splic[3]!=''){
+                            zuo(splic[2], 1, url, name, "",splic[3]);
+                        }else{
+                            zuo(splic[2], 1, url, name, "",);
+                        }
                     } else {
-                        zuo(splic[2], 2, daccount.avatarUrl, daccount.name, "");
+                        if (splic[3]!=''){
+                            zuo(splic[2], 2, daccount.avatarUrl, daccount.name, "",splic[3]);
+                        }else {
+                            zuo(splic[2], 2, daccount.avatarUrl, daccount.name, "");
+                        }
                     }
                 }
                 chat_body();
@@ -122,13 +131,15 @@ $(function () {
             var data = user.text;//消息内容
             var name = user.userName;//发送者姓名
             var url = user.userUrl;
+            var data1 = user.data;
+            data1=timeTranslation(data1);
             var div = $("#liaotian");
             var a_a_a_a1_a1_a = $("<i/>", {
                 "class": "ti-double-check text-info",
             });
             var a_a_a_a1_a1 = $("<div/>", {
                 "class": "time",
-                html: "01:20"
+                html: data1
             });
             var a_a_a_a1_a = $("<h5/>", {
                 text: name
@@ -176,7 +187,8 @@ $(function () {
     }
 
     /*向页面添加数据方法*/
-    function zuo(message, type, url, name, tianjia) {
+    function zuo(message, type, url, name, tianjia,data) {
+        data=timeTranslation(data);
         var div = $("#liaotian");
         if (type == 1) {
             var a_a_a_a1_a1_a = $("<i/>", {
@@ -184,7 +196,7 @@ $(function () {
             });
             var a_a_a_a1_a1 = $("<div/>", {
                 "class": "time",
-                html: "01:20"
+                html: data
             });
             var a_a_a_a1_a = $("<h5/>", {
                 text: name
@@ -232,7 +244,7 @@ $(function () {
             });
             var a_a_a_a1_a1 = $("<div/>", {
                 "class": "time",
-                html: "01:20"
+                html: data
             });
             var a_a_a_a1_a = $("<h5/>", {
                 text: name
@@ -355,12 +367,16 @@ $(function () {
         var message = $(this).find('input[type=hidden]');
         $("#friendBiaoqian").empty()
         //根据account查询出用户的信息
+        var account=message.val();
+        if (account==''){
+            account=$("#account").val();
+        }
         $.ajax({
             type: "post",
             url: "/getUserIntroduce",
             contentType: "application/json;charset=UTF-8",
             data: JSON.stringify({
-                "account": message.val(),
+                "account": account,
             }),
             success: function (response) {//成功回调函数
                 var data = JSON.parse(response);
@@ -433,5 +449,9 @@ function friendNoit(e) {
             alert("通知成功，请留意好友列表哦")
         }
     });
+}
+/*将时间转译*/
+function timeTranslation(Time) {
+     return Time;
 }
 

@@ -31,25 +31,29 @@ public class IndexController {
     private QuerstionService querstionService;
     @Autowired
     private HoTaagCache hoTaagCache;
+
     /**
-     *主页跳转
-     * */
+     * 主页跳转
+     */
     @GetMapping("/")
     public String into(HttpServletRequest request,
                        Model model,
-                       @RequestParam(name = "page" ,defaultValue = "1") Integer page,
-                       @RequestParam(name = "size",defaultValue = "5") Integer size,
-                       @RequestParam(name="search",defaultValue ="false")String search,
-                       @RequestParam(name="hot",defaultValue ="false")String hot
-                      ) {
-        PageQuestionDTO questionDTO=querstionService.friendQuestionAll(page,size,search,hot);
+                       @RequestParam(name = "page", defaultValue = "1") Integer page,
+                       @RequestParam(name = "size", defaultValue = "5") Integer size,
+                       @RequestParam(name = "search", defaultValue = "false") String search,
+                       @RequestParam(name = "hot", defaultValue = "false") String hot,
+                       @RequestParam(name = "property", defaultValue = "false") String property
+    ) {
+        PageQuestionDTO questionDTO = querstionService.friendQuestionAll(page, size, search, hot, property);
         List<TagsDTO> paixu = hoTaagCache.paixu(hoTaagCache.getTags());
-        model.addAttribute("Hotlabel",paixu);
-        model.addAttribute("questionDTO",questionDTO);
-        if (!StringUtils.equals("false",search)){
-            model.addAttribute("search",search);
-        }else if(!StringUtils.equals("false",hot)){
-            model.addAttribute("hot",hot);
+        model.addAttribute("Hotlabel", paixu);
+        model.addAttribute("questionDTO", questionDTO);
+        if (!StringUtils.equals(property,"false")){
+            model.addAttribute("property",property);
+        }else if (!StringUtils.equals("false", search)) {
+            model.addAttribute("search", search);
+        } else if (!StringUtils.equals("false", hot)) {
+            model.addAttribute("hot", hot);
         }
         return "ind";
     }
@@ -62,7 +66,7 @@ public class IndexController {
 
     //
     @GetMapping("index22")
-    public String ccc(){
+    public String ccc() {
 
         return "index22";
     }

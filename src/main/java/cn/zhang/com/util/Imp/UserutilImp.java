@@ -154,9 +154,6 @@ public class UserutilImp implements UserUtil {
         Collections.sort(lstEntry, ((o1, o2) -> {
             return o1.getValue().compareTo(o2.getValue());
         }));
-        lstEntry.forEach(o -> {
-            System.out.println(o.getKey() + ":" + o.getValue());
-        });
         List<String> afd = new ArrayList<>();
         for (int i = lstEntry.size() - 1; i >= 0; i--) {
             if (lstEntry.get(i).getValue().equals("2")) {
