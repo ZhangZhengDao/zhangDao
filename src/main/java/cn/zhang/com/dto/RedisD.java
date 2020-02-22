@@ -24,7 +24,7 @@ public class RedisD {
 
     public static Jedis getRedis() {
         //连接本地的 Redis 服务
-        Jedis jedis = new Jedis("localhost", 6379);
+        Jedis jedis = new Jedis("http://106.75.80.178", 6379);
         /* jedis.auth("214834");*/
         return jedis;
     }
