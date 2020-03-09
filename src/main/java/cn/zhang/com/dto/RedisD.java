@@ -24,10 +24,11 @@ public class RedisD {
 
     public static Jedis getRedis() {
         //连接本地的 Redis 服务
-        Jedis jedis = new Jedis("106.75.80.178", 6379);
+        Jedis jedis = new Jedis("127.0.0.1", 6379);
         /* jedis.auth("214834");*/
         return jedis;
     }
+
 
     /*存储用户的聊天记录*/
     public void setJilu( User user, String account, String text,String data) {
@@ -158,6 +159,41 @@ public class RedisD {
             map.put(user.getAccount(), 1 + "");
             map.put("text"+user.getAccount(), text);
             jedis.hmset("newestMap" + daccount, map);
+        }
+    }
+
+    /*
+    * 判断key是否存在
+    * */
+    public boolean JudgeKeyExist(String key){
+        Jedis redis = RedisD.getRedis();
+         return redis.exists(key);
+    }
+
+    /*
+    * 将所给的key增加一
+    *
+    * */
+    public void findKeyPlusOne(String key){
+        Jedis redis = RedisD.getRedis();
+        boolean b = JudgeKeyExist(key);
+        if (b){
+            redis.incr(key);
+        }else {
+            redis.set("existPeopleCounting",1+"");
+        }
+    }
+    /*
+     * 将所给的key减一
+     *
+     * */
+    public void findKeySubtractOne(String key){
+        Jedis redis = RedisD.getRedis();
+        boolean b = JudgeKeyExist(key);
+        if (b){
+            redis.decr(key);
+        }else {
+            return;
         }
     }
 

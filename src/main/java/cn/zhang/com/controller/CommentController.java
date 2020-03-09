@@ -39,15 +39,19 @@ public class CommentController {
         //向数据库添加
         commentService.insert(user, commentDTO);
          //拿到当前问题的所有回复列表
-        return new ResultDTO().okof();
+        return   ResultDTO.okof();
     }
 
     /*向数据库查找当前id的二级评论*/
     @ResponseBody
     @RequestMapping(value = "/getCommenter/{id}", method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    public ResultDTO<CommentControllerDTO> getCommenter(@PathVariable Long id,HttpServletRequest request) {//此注解可以将参数通过反射自动封装到对象中
+    public ResultDTO<CommentControllerDTO> getCommenter(@PathVariable Long id,
+                                                        HttpServletRequest request,
+                                                        @RequestParam(name = "page",defaultValue = "0") Integer page,
+                                                        @RequestParam(name="size",defaultValue = "5") Integer size) {
+        System.out.println(page);
         User user = (User) request.getSession().getAttribute("user");
-        List<CommentControllerDTO> comment=commentService.getList(id,2, user);
+        List<CommentControllerDTO> comment=commentService.getList(id,2, user,page,size);
         return new ResultDTO().okofer(comment);
     }
 

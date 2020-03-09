@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <script src="/js/register.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>编程问注册</title>
+    <!-- Favicon -->
+    <link rel="icon" href="/dist/media/img/favicon.png" type="image/png">
+
+    <!-- Soho css -->
+    <link rel="stylesheet" href="/css/soho.min.css">
+</head>
+<style>
+    .style_img {
+        border: 2px solid #3CB371;
+        border-radius: 50%;
+    }
+    .circular{
+        border-radius: 50%;
+    }
+</style>
+
+
+<body class="form-membership" style="background-color: ghostwhite">
+
+<div class="form-wrapper">
+
+    <!-- logo -->
+    <div class="logo">
+        <svg  version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+             width="50.004px" height="50.003px" viewBox="0 0 33.004 33.003" style="enable-background:new 0 0 33.004 33.003;"
+             xml:space="preserve">
+            <g>
+                <path d="M4.393,4.788c-5.857,5.857-5.858,15.354,0,21.213c4.875,4.875,12.271,5.688,17.994,2.447l10.617,4.161l-4.857-9.998
+                    c3.133-5.697,2.289-12.996-2.539-17.824C19.748-1.072,10.25-1.07,4.393,4.788z M25.317,22.149l0.261,0.512l1.092,2.142l0.006,0.01
+                    l1.717,3.536l-3.748-1.47l-0.037-0.015l-2.352-0.883l-0.582-0.219c-4.773,3.076-11.221,2.526-15.394-1.646
+                    C1.469,19.305,1.469,11.481,6.277,6.672c4.81-4.809,12.634-4.809,17.443,0.001C27.919,10.872,28.451,17.368,25.317,22.149z"/>
+                <g>
+                    <circle cx="9.835" cy="16.043" r="1.833"/>
+                    <circle cx="15.502" cy="16.043" r="1.833"/>
+                    <circle cx="21.168" cy="16.043" r="1.833"/>
+                </g>
+            </g>
+            <g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g>
+        </svg>
+    </div>
+    <!-- ./ logo -->
+
+    <h5>欢迎注册编程问</h5>
+
+    <!-- form -->
+
+        <div class="form-group input-group-lg" >
+            <input id="nameInput" type="text" class="form-control" placeholder="输入用户名" onblur="repetitionName(this.value)" required autofocus>
+        </div>
+        <p id="name" style="margin-bottom: 0px;margin-top: -15px;display: none;color: #333"></p>
+        <div class="form-group input-group-lg">
+            <input type="password" id="passwordFirst" class="form-control" placeholder="密码" onblur="repetitionPassword(this.value)" required>
+        </div>
+        <p id="password" style="margin-bottom: 0px;margin-top: -15px;display: none;color: #333"></p>
+        <div class="form-group input-group-lg">
+            <input type="password" id="passwordRepetition" class="form-control" placeholder="确认密码" onblur="registerPwdRepetitionVerify()" required>
+        </div>
+        <p id="RepetitionPassword" style="margin-bottom: 0px;margin-top: -15px;display: none;color: #333"></p>
+       <!-- <div class="form-group d-flex justify-content-between">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" checked="" id="customCheck1">
+                <label class="custom-control-label" for="customCheck1">Remember me</label>
+            </div>
+            <a href="./reset-password.html">Reset password</a>
+        </div>-->
+        <p class="text-muted">请选择默认头像</p>
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <img   class="circular style_img" style="width: 35px;height: 35px" onclick="headPortrait(this)" src="https://elasticsearch.cn/uploads/avatar/000/00/44/60_avatar_max.jpg">
+            </li>
+            <li class="list-inline-item">
+                <img  class="circular" style="width: 35px;height: 35px" onclick="headPortrait(this)" src="https://elasticsearch.cn/uploads/avatar/000/00/88/56_avatar_max.jpg">
+            </li>
+            <li class="list-inline-item">
+                <img  class="circular" style="width: 35px;height: 35px" onclick="headPortrait(this)" src="https://elasticsearch.cn/uploads/avatar/000/01/16/33_avatar_max.jpg">
+            </li>
+            <li class="list-inline-item">
+                <img  class="circular" style="width: 35px;height: 35px" onclick="headPortrait(this)" src="https://elasticsearch.cn/uploads/avatar/000/00/98/22_avatar_max.jpg">
+            </li>
+            <li class="list-inline-item">
+                <img  class="circular" style="width: 35px;height: 35px" onclick="headPortrait(this)" src="https://elasticsearch.cn/uploads/avatar/000/00/92/35_avatar_max.jpg">
+            </li>
+            <li class="list-inline-item">
+                <img  class="circular" style="width: 35px;height: 35px" onclick="headPortrait(this)" src="https://elasticsearch.cn/uploads/avatar/000/00/01/83_avatar_max.jpg">
+            </li>
+            <li class="list-inline-item">
+                <img  class="circular" style="width: 35px;height: 35px" onclick="headPortrait(this)" src="https://elasticsearch.cn/uploads/avatar/000/00/00/96_avatar_max.jpg">
+            </li>
+        </ul>
+        <button class="btn btn-primary btn-lg btn-block" onclick="registerR()">注册</button>
+        <p id="register" style="margin-bottom: 0px;margin-top: 0px;display: none;color: #333"></p>
+        <hr>
+        <p class="text-muted">欢迎注册编程问网站，一起来学习吧</p>
+        <p class="text-muted">已经注册啦？</p>
+        <a href="./register.html" class="btn btn-outline-light btn-sm">快去登录吧</a>
+
+    <!-- ./ form -->
+
+</div>
+
+<!-- JQuery -->
+<script src="/js/jquery-3.4.1.min.js"></script>
+<!-- Popper.js -->
+<script src="/vendor/popper.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="/vendor/bootstrap/bootstrap.min.js"></script>
+
+<!-- Soho -->
+<script src="/js/soho.min.js"></script>
+</body>
+</html>

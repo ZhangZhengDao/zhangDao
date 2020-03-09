@@ -146,7 +146,7 @@ public class AuthorizeController {
         user.setPasswd(jsonpObject.get("password").toString());
         user=userService.Denglu(user);
         if (user==null){
-        return   new ResultDTO<>().denglu(CustomizeErrorCode.INVALID_DANGLE);
+        return   ResultDTO.denglu(CustomizeErrorCode.INVALID_DANGLE);
         }
         //写入cookie和session
         /*向数据库查询当前用户的未读通知数*/
@@ -156,6 +156,6 @@ public class AuthorizeController {
         //写入cookie
         Cookie cookie = new Cookie("token", user.getToken());
         response.addCookie(cookie);
-        return   new ResultDTO<>().denglu(CustomizeErrorCode.INVALID_DECLENSION);
+        return   ResultDTO.denglu(CustomizeErrorCode.INVALID_DECLENSION);
     }
 }

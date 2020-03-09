@@ -67,7 +67,9 @@ public class QuestionUtilImp implements QuestionUtil {
      * 根据所给集合分页
      * */
     private List<Question> findLimit(Integer page, Integer size, List<Question> list) {
+        Integer pageSecond=page;
         page = size * (page - 1);
+        size=pageSecond*size;
         if (size >= list.size()) {
             size = list.size();
         }
@@ -93,6 +95,16 @@ public class QuestionUtilImp implements QuestionUtil {
         }else {
             return findQuestionLimit(page,size);
         }
+    }
+
+    @Override
+    public Integer TypeCount(String type) {
+        if (StringUtils.equals(type, "热门问题")) {
+            return hoTaagCache.getFindQuestionHottest().size();
+        }else if (StringUtils.equals(type,"消灭零回复")){
+            return hoTaagCache.getFindQuestionNotReply().size();
+        }
+        return 0;
     }
 
 }

@@ -90,6 +90,10 @@
                                                         <a style="float: right;font-size: 15px"
                                                            class="label label-success" href="/github">github 直接登录</a>
                                                     </div>
+                                                    <div class="checkbox">
+                                                        <a style="float: right;font-size: 15px"
+                                                           class="label label-success" href="/register">注册</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </form>
@@ -103,9 +107,9 @@
                         </div>
                     </div>
                     <script>
-                        $(function () {
-                            $('[data-toggle="tooltip"]').tooltip()
-                        })
+                        // $(function () {
+                        //     $('[data-toggle="tooltip"]').tooltip()
+                        // })
                     </script>
                     <li class="dropdown" th:if="${session.user!=null}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
@@ -135,7 +139,7 @@
         }
         //判断当前浏览器是否支持WebSocket
         if ('WebSocket' in window) {
-            webSocket = new WebSocket('ws://106.75.80.178:8887/webSocket/' + name);
+            webSocket = new WebSocket('ws://localhost:8887/webSocket/' + name);
         } else {
             alert("当前浏览器不支持WebSocket");
         }

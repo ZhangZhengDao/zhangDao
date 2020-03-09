@@ -180,13 +180,16 @@ public class QuerstionService {
     }
 
     public List<Question> likegetListCommentType2(QuestionDTO questionDTO) {
+        //在这里数据库 有一个bug 正则表达式判断c++字符会报错，故转化
+        String replace = questionDTO.getQuestion().getTag().replace("c++", "c+");
+        System.out.println(replace);
         //分割tag
-        String[] tag = questionDTO.getQuestion().getTag().split(",");
+        String[] tag = replace.split(",");
         String collect = Arrays.stream(tag).collect(Collectors.joining("|"));
         Question question = questionDTO.getQuestion();
         question.setId(questionDTO.getQuestion().getId());
         question.setTag(collect);
-        List<Question> selectlike = questionExtMapper.selectlike(question);
+        List<Question> selectlike = questionExtMapper.findTag(question);
         return selectlike;
     }
 
@@ -211,25 +214,37 @@ public class QuerstionService {
      */
     public PageQuestionDTO friendQuestionAll(Integer page, Integer size, String search, String hot, String property) {
         PageQuestionDTO<QuestionDTO> pageQuestionDTO = new PageQuestionDTO<>();
+        pageDTO pageDTO=null;
         List<Question> questionLimit = new ArrayList<>();
+        //分类内容
         if (!StringUtils.equals(property, "false")) {
             questionLimit=questionUtil.classify(page,size,property);
-            pageQuestionDTO.getfenyeshu(hoTaagCache.getFindQuestionHottest().size(),size);
-        } else if (!StringUtils.equals(search, "false")) {
+            pageDTO=new pageDTO(page,size,questionUtil.TypeCount(property));
+        }
+        //搜索
+        else if (!StringUtils.equals(search, "false")) {
             questionLimit = questionUtil.findQuestionLike(page, size, search);
             Question example = new Question();
             example.setTitle(search);
             pageQuestionDTO.getfenyeshu(Math.toIntExact(questionExtMapper.getzongshu(example)), size);
-        } else if (!StringUtils.equals(hot, "false")) {
+            pageDTO=new pageDTO(page,size,Math.toIntExact(questionExtMapper.getzongshu(example)));
+        }
+        //热度标签
+        else if (!StringUtils.equals(hot, "false")) {
             questionLimit = questionUtil.findQuestionLabel(page, size, hot);
             Question example = new Question();
             example.setTag(hot);
             pageQuestionDTO.getfenyeshu(Math.toIntExact(questionExtMapper.getzongshuRUMEN(example)), size);
-        } else {
+            pageDTO=new pageDTO(page,size,Math.toIntExact(questionExtMapper.getzongshuRUMEN(example)));
+        }
+        //默认
+        else {
             questionLimit = questionUtil.findQuestionLimit(page, size);
             pageQuestionDTO.getfenyeshu(Math.toIntExact(questionExtMapper.count()), size);
+            pageDTO=new pageDTO(page,size,Math.toIntExact(questionExtMapper.count()));
         }
         List<QuestionDTO> userAndQuestionAll = userUtil.findUserAndQuestionAll(questionLimit);
+        pageQuestionDTO.setPageDTO(pageDTO);
         pageQuestionDTO.setQuestionDTOS(userAndQuestionAll);
         return pageQuestionDTO;
     }

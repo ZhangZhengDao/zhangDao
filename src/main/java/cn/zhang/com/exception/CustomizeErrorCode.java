@@ -20,7 +20,12 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     INVALID_DANGLE(2014, "登录失败用户名或密码错误"),
     INVALID_DECLENSION(2000, "登录成功"),
     INVALID_Friend(2015, "你并不是对方好友,不能使用发消息功能"),
-    INVALID_FriendQITA(2016, "你收到新的信息")
+    INVALID_FriendQITA(2016, "你收到新的信息"),
+    INVALID_NAME(2017, "用户名不能为空"),
+    INVALID_NAMECHONGGU(2018, "用户名重复"),
+    INVALID_NAMEPASSOWD(2019, "密码不能为空"),
+    INVALID_NAMEPASSOWDTYPE(2020, "密码不符合规范8~20位数字字母组合"),
+    INVALID_CHUCESHIBAI(2021, "注册失败")
     ;
 
     @Override

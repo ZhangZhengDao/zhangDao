@@ -22,7 +22,6 @@ public class  ResultDTO<T> {
     public static ResultDTO okof() {
         ResultDTO resultDTO = new ResultDTO();
         resultDTO.setCode(200);
-
         resultDTO.setMessage("回复成功");
         return resultDTO;
     }

@@ -22,4 +22,10 @@ public interface QuestionUtil {
      * @param property 根据所给内容查找到相关信息
      * */
     List<Question> classify(Integer page, Integer size, String property);
+    /**
+    * 根据问题类型查询出所有问题数
+    * @param type 问题类型
+     * @return 问题总数
+    * */
+    Integer TypeCount(String type);
 }

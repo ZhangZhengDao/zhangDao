@@ -3,12 +3,8 @@ package cn.zhang.com.controller;
 import cn.zhang.com.advice.TagCache;
 import cn.zhang.com.dto.CommentControllerDTO;
 import cn.zhang.com.dto.QuestionDTO;
-import cn.zhang.com.dto.TagDTO;
-import cn.zhang.com.enums.CommentTypeEnum;
 import cn.zhang.com.exception.CustomizeErrorCode;
 import cn.zhang.com.exception.CustomizeException;
-import cn.zhang.com.exception.ICustomizeErrorCode;
-import cn.zhang.com.model.Comment;
 import cn.zhang.com.model.Question;
 import cn.zhang.com.model.User;
 import cn.zhang.com.service.CommentService;
@@ -18,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -32,7 +29,9 @@ public class QuestionController {
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") String Sid,
                            Model model,
-                           HttpServletRequest request) {
+                           HttpServletRequest request,
+                           @RequestParam(name = "page",defaultValue = "0") Integer page,
+                           @RequestParam(name = "size",defaultValue = "5") Integer size) {
         //先判断地址栏内容是否符合要求
         Integer id=0;
         try {
@@ -50,7 +49,7 @@ public class QuestionController {
         /*当前用户是否点赞需要用户信息，判断用户是否登录*/
         User user= (User) request.getSession().getAttribute("user");
         //拿到所有回复的问题
-        List<CommentControllerDTO> comment=commentService.getList(L,1,user);
+        List<CommentControllerDTO> comment=commentService.getList(L,1,user, page, size);
         //mysql正则表达式模糊匹配
         List<Question> questions=querstionService.likegetListCommentType2(questionDTO);
         model.addAttribute("likeType2",questions);

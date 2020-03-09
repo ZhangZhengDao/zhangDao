@@ -62,7 +62,7 @@
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-success btn-lg">Reconnect</button>
-                <a href="login.html" class="btn btn-link">Logout</a>
+                <a href="register.html" class="btn btn-link">Logout</a>
             </div>
         </div>
     </div>
@@ -614,7 +614,7 @@
                         <a href="#" class="dropdown-item" data-navigation-target="contact-information">详细信息</a>
                         <a href="#" class="dropdown-item" data-toggle="modal" data-target="#settingModal">Settings</a>
                         <div class="dropdown-divider"></div>
-                        <a href="login.html" class="dropdown-item text-danger">Logout</a>
+                        <a href="register.html" class="dropdown-item text-danger">Logout</a>
                     </div>
                 </li>
             </ul>
@@ -2096,7 +2096,7 @@
     }
     //判断当前浏览器是否支持WebSocket
     if ('WebSocket' in window) {
-        webSocket = new WebSocket('ws://106.75.80.178:8887/webSocket/' + name);/*+ ":" + "communication"*/
+        webSocket = new WebSocket('ws://localhost:8887/webSocket/' + name);/*+ ":" + "communication"*/
     } else {
         alert("当前浏览器不支持WebSocket");
     }

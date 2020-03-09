@@ -46,18 +46,4 @@ public class IndexController {
         }
         return "ind";
     }
-
-    //异常测试
-    @GetMapping("/error")
-    public String error() {
-        return "error";
-    }
-
-    //
-    @GetMapping("index22")
-    public String ccc() {
-
-        return "index22";
-    }
-
 }

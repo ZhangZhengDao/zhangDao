@@ -3,6 +3,7 @@ package cn.zhang.com.dto;
 import cn.zhang.com.model.Comment;
 import cn.zhang.com.model.Dianzan;
 import cn.zhang.com.model.User;
+import cn.zhang.com.model.cc;
 import lombok.Data;
 
 @Data

@@ -39,7 +39,6 @@ public class WebSocket {
         this.session = session;
         this.name = name;
         Jedis jedis = RedisD.getRedis();
-        System.out.println(name);
         Boolean aBoolean = jedis.exists(name);
         if (aBoolean == false) {
             if (!name.equals("undefined")) {
@@ -49,10 +48,9 @@ public class WebSocket {
                 map.put("name", name);
                 map.put("id", session.getId());
                 jedis.hmset(name, map);
-                //加入链接
-                System.out.println("加入了链接");
-                webSockets.add(this);
-                System.out.println(webSockets.size());
+                //加入链接 existPeopleCounting
+//                new RedisD().findKeyPlusOne("existPeopleCounting");
+                jedis.set("existPeopleCounting",name);
             }
         }
     }
@@ -62,9 +60,9 @@ public class WebSocket {
     public void onClose() {
         Jedis jedis = RedisD.getRedis();
         Boolean exists = jedis.exists(name);
-        if (exists == true) {
+        if (exists == true&&!name.equals("undefined")) {
             jedis.del(name);
-            System.out.println("关闭了链接"+name);
+//            new RedisD().findKeySubtractOne("existPeopleCounting");
             webSockets.remove(this);
         }
     }

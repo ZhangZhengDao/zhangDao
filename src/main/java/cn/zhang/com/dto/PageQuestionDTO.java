@@ -8,6 +8,7 @@ import java.util.List;
 @Data
 public class  PageQuestionDTO<T> {
     private List<T> questionDTOS;
+    private pageDTO pageDTO;
     private List<Integer> yigong;//一共几页
 
 

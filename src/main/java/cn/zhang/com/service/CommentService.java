@@ -7,6 +7,7 @@ import cn.zhang.com.enums.DianzanEum;
 import cn.zhang.com.enums.NotificationEnum;
 import cn.zhang.com.mapper.*;
 import cn.zhang.com.model.*;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,8 @@ public class CommentService {
     private NotiFicationMapper notiFicationMapper;
     @Autowired
     private DianzanMapper dianzanMapper;
+    @Autowired
+    private ccMapper ccMapper;
 
     @Transactional//开启事务--当下面任何一条语句执行失败后都将会回滚到最初始状态
     public void insert(User user, CommentDTO commentDTO) {
@@ -80,15 +83,16 @@ public class CommentService {
         }
     }
 
-    public List<CommentControllerDTO> getList(Long parentId, int i, User user1) {
+    public List<CommentControllerDTO> getList(Long parentId, int i, User user1, Integer page, Integer size) {
         List<CommentControllerDTO> list=new ArrayList<CommentControllerDTO>();
         CommentExample commentExample=new CommentExample();
         commentExample.createCriteria().andParentIdEqualTo(parentId).andTypeEqualTo(i);
         //排序
         commentExample.setOrderByClause("gmt_create desc");
         List<CommentControllerDTO > list1=new ArrayList<>();
-        //拿到了所有回复的问题
-        List<Comment> comments = commentMapper.selectByExample(commentExample);
+        //每次只查询5个
+        RowBounds rowBounds = new RowBounds(page,size);
+        List<Comment> comments =commentMapper.selectByExampleWithRowbounds(commentExample,rowBounds);
         if (comments.size()==0){
             return list1;
         }
@@ -116,8 +120,10 @@ public class CommentService {
                  example.createCriteria().andOuteridEqualTo(comment.getId().longValue()).andNotifierEqualTo(user1.getId().longValue());
                  List<Dianzan> dianzans = dianzanMapper.selectByExample(example);
                  if (dianzans.size() != 0) {
-                     if (StringUtils.equals(dianzans.get(0).getZhaunttai(), DianzanEum.REPLY_QUESTION.getType()))
-                     commentControllerDTO.setDianzan(dianzans.get(0));
+                     if (StringUtils.equals(dianzans.get(0).getZhaunttai(), DianzanEum.REPLY_QUESTION.getType())) {
+                         commentControllerDTO.setDianzan(dianzans.get(0));
+                     }
+
                  }
              }
             commentControllerDTO.setUser(collect1.get(comment.getCommentator()));
